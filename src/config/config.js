@@ -46,6 +46,13 @@ export const config = convict({
     format: String,
     default: 'AI at Defra'
   },
+  prototypePassword: {
+    doc: 'If set, gates the whole prototype behind HTTP Basic Auth with this password (any username). Set it as a secret per CDP environment; leave empty to disable (e.g. local dev). Kept out of the repo.',
+    format: String,
+    default: '',
+    sensitive: true,
+    env: 'PROTOTYPE_PASSWORD'
+  },
   root: {
     doc: 'Project root',
     format: String,
