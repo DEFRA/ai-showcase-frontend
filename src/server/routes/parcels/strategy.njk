@@ -1,0 +1,76 @@
+{% extends 'variants/parcels.njk' %}
+
+{% block main %}
+<main id="main-content" tabindex="-1">
+  <article class="par-article">
+    <nav aria-label="Breadcrumb" class="par-breadcrumb">
+      <a href="/parcels" class="par-breadcrumb__link">&larr; AI at Defra</a>
+    </nav>
+
+    <header class="par-case-header">
+      <div class="par-case-meta">
+        <span>Strategy</span>
+        <span>2026 to 2028</span>
+        <span>Public summary</span>
+      </div>
+      <div class="par-case-header__body">
+        <h1 class="par-case-title">Our plan for AI, 2026 to 2028</h1>
+        <p class="par-case-standfirst">A land-use plan for AI at Defra. Where we sow it, where we leave it fallow, and how we know it is working. This is a short public summary of the full strategy.</p>
+      </div>
+    </header>
+
+    <div class="par-pagebody">
+      <section class="par-section" aria-label="Where we sow">
+        <p class="par-section__eyebrow">The fields</p>
+        <h2 class="par-section__title">Where we sow</h2>
+        <p class="par-section__intro">Three kinds of work where AI earns its place on Defra's land. Each is already growing a live pilot.</p>
+        <div class="par-cellgrid">
+          {% for f in strategy.focus %}
+          <div class="par-cell par-sow">
+            <span class="par-sow__index">Field 0{{ loop.index }}</span>
+            <h3 class="par-sow__area">{{ f.area }}</h3>
+            <p class="par-sow__gain">{{ f.gain }}.</p>
+            <span class="par-ptag par-ptag--green">{{ f.example }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="par-section" aria-label="Where we leave it fallow">
+        <p class="par-section__eyebrow">The boundaries</p>
+        <h2 class="par-section__title">Where we leave it fallow</h2>
+        <p class="par-section__intro">The lines we will not cross, whatever a tool can do. These hold on every plot.</p>
+        <div class="par-hedge">
+          <ul class="par-hedge__list">
+            {% for b in strategy.boundaries %}
+            <li class="par-hedge__item">
+              <svg class="par-hedge__tick" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="9" stroke-width="2"></circle>
+                <line x1="5.6" y1="18.4" x2="18.4" y2="5.6" stroke-width="2"></line>
+              </svg>
+              <p class="par-hedge__text">{{ b }}</p>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+
+      <section class="par-section" aria-label="How we know">
+        <p class="par-section__eyebrow">The tests</p>
+        <h2 class="par-section__title">How we know</h2>
+        <p class="par-section__intro">Every tool is held to the same three tests, in public, from baseline to retirement.</p>
+        <ol class="par-timeline">
+          {% for m in strategy.measures %}
+          <li class="par-timeline__step">
+            <span class="par-timeline__dot" aria-hidden="true"></span>
+            <h3 class="par-timeline__title">{{ m.term }}</h3>
+            <p class="par-timeline__body">{{ m.body }}</p>
+          </li>
+          {% endfor %}
+        </ol>
+        <p class="par-plan-next">Next update: {{ strategy.nextUpdate }}</p>
+      </section>
+    </div>
+  </article>
+</main>
+{% endblock %}

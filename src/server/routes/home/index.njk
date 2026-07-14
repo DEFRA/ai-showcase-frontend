@@ -1,17 +1,62 @@
 {% extends 'layouts/page.njk' %}
 
+{% block header %}
+  <header class="app-defra-header">
+    <div class="govuk-width-container">
+      <a href="/" class="app-defra-header__brand" aria-label="AI at Defra, Department for Environment, Food and Rural Affairs">
+        <span class="app-defra-header__logo" aria-hidden="true"></span>
+        <span class="app-defra-header__service">AI at Defra</span>
+      </a>
+    </div>
+  </header>
+{% endblock %}
+
+{% block footer %}
+  <footer class="app-defra-footer" role="contentinfo">
+    <div class="govuk-width-container">
+      <ul class="app-defra-footer__links">
+        <li><a class="app-defra-footer__link" href="#">Privacy</a></li>
+        <li><a class="app-defra-footer__link" href="#">Cookies</a></li>
+        <li><a class="app-defra-footer__link" href="#">Accessibility statement</a></li>
+      </ul>
+      <p class="app-defra-footer__meta">Maintained by the AI Capability and Enablement team at Defra. This is a design-review prototype.</p>
+      <p class="app-defra-footer__meta">All content is available under the <a class="app-defra-footer__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated.</p>
+    </div>
+  </footer>
+{% endblock %}
+
 {% block content %}
   {{ appHeading({
-    text: heading,
-    caption: "ai-showcase-frontend"
+    text: heading
   }) }}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <div class="govuk-body" data-testid="app-page-body">
-        <p></p>
-      </div>
+      <p class="govuk-body-l">Three directions for the public showcase. Open one to explore the full design.</p>
     </div>
   </div>
 
+  <ul class="app-choose">
+    <li class="app-choose__card app-choose__card--monument">
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Monument</h2>
+      <p class="govuk-body-s app-choose__desc">Warm agricultural theme. Ink line-art on cream, with engraved field-survey plates.</p>
+      <div class="app-choose__actions">
+        <a class="govuk-link govuk-link--no-visited-state app-choose__open" href="/monument">Open the home page<span aria-hidden="true"> &rarr;</span></a>
+      </div>
+    </li>
+    <li class="app-choose__card app-choose__card--parcels">
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Parcels</h2>
+      <p class="govuk-body-s app-choose__desc">Dark cartographic theme. A field-parcel grid with a footpath drawn as you scroll.</p>
+      <div class="app-choose__actions">
+        <a class="govuk-link govuk-link--no-visited-state app-choose__open" href="/parcels">Open the home page<span aria-hidden="true"> &rarr;</span></a>
+      </div>
+    </li>
+    <li class="app-choose__card app-choose__card--daylight">
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Daylight</h2>
+      <p class="govuk-body-s app-choose__desc">Light editorial theme, with generative plates drawn from each project.</p>
+      <div class="app-choose__actions">
+        <a class="govuk-link govuk-link--no-visited-state app-choose__open" href="/daylight">Open the home page<span aria-hidden="true"> &rarr;</span></a>
+      </div>
+    </li>
+  </ul>
 {% endblock %}

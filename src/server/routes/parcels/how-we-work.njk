@@ -1,0 +1,75 @@
+{% extends 'variants/parcels.njk' %}
+
+{% block main %}
+<main id="main-content" tabindex="-1">
+  <article class="par-article">
+    <nav aria-label="Breadcrumb" class="par-breadcrumb">
+      <a href="/parcels" class="par-breadcrumb__link">&larr; AI at Defra</a>
+    </nav>
+
+    <header class="par-case-header">
+      <div class="par-case-header__body">
+        <h1 class="par-case-title">How we work</h1>
+        <p class="par-case-standfirst">Three rules decide what we build and what we stop. Below them, the path a tool walks from first idea to retirement, and the two gates that can send it back.</p>
+      </div>
+    </header>
+
+    <div class="par-pagebody">
+      <section class="par-section" aria-label="The rules">
+        <p class="par-section__eyebrow">The rules</p>
+        <h2 class="par-section__title">Three rules, one of them above the rest</h2>
+        <p class="par-section__intro">The first rule holds the whole plan up. The other two keep it honest.</p>
+        <div class="par-principles">
+          {% set flag = principles[0] %}
+          <div class="par-principle--flagship">
+            <span class="par-flag__index">Rule 01</span>
+            <h3 class="par-flag__title">{{ flag.title }}</h3>
+            <p class="par-flag__body">{{ flag.body }}</p>
+          </div>
+          <div class="par-principles__pair">
+            {% for p in principles %}
+            {% if not loop.first %}
+            <div class="par-pcell">
+              <span class="par-pcell__index">Rule 0{{ loop.index }}</span>
+              <h3 class="par-pcell__title">{{ p.title }}</h3>
+              <p class="par-pcell__body">{{ p.body }}</p>
+            </div>
+            {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <section class="par-section" aria-label="The path a tool takes">
+        <p class="par-section__eyebrow">The path</p>
+        <h2 class="par-section__title">The path a tool takes</h2>
+        <p class="par-section__intro">Six gates from idea to retirement. At the two amber gates the path can fork, and a request leaves as something that stopped.</p>
+        <ol class="par-gates">
+          {% for g in lifecycle %}
+          <li class="par-gate{% if g.branch %} par-gate--fork{% endif %}">
+            <span class="par-gate__dot" aria-hidden="true"></span>
+            <h3 class="par-gate__name">{{ g.gate }}</h3>
+            <p class="par-gate__decision">{{ g.decision }}</p>
+            <p class="par-gate__outcome">{{ g.outcome }}.</p>
+            {% if g.branch %}
+            <span class="par-gate__stop">
+              <svg class="par-gate__stop-tick" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="9" stroke-width="2"></circle>
+                <line x1="5.6" y1="18.4" x2="18.4" y2="5.6" stroke-width="2"></line>
+              </svg>
+              <span class="par-gate__stop-text">The path can stop here</span>
+            </span>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ol>
+      </section>
+
+      <div class="par-quiet">
+        <p class="par-quiet__text">Any Defra team can bring us a problem. We will tell you quickly whether AI is the right tool, and if it is not, point you to something simpler.</p>
+        <a href="/parcels" class="par-quiet__cta">Start with triage &rarr;</a>
+      </div>
+    </div>
+  </article>
+</main>
+{% endblock %}

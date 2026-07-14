@@ -1,0 +1,101 @@
+// =========================================================================
+// SHARED SELF-HOSTED FONTS for the "AI at Defra" showcase variants.
+// Replaces the mockups' Google Fonts <link>s. Loaded as its own bundle by
+// every variant layout (Monument, Parcels, Daylight) so the @font-face rules
+// are declared once. Latin subsets only, exactly the weights the mockups use.
+// Vite hashes and rewrites the relative url() paths automatically.
+// =========================================================================
+
+// ---- Archivo Black (Monument display) ----
+@font-face {
+  font-family: 'Archivo Black';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/archivo-black-latin-400-normal.woff2') format('woff2');
+}
+
+// ---- Newsreader (Monument pull-quotes) ----
+@font-face {
+  font-family: Newsreader;
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/newsreader-latin-400-italic.woff2') format('woff2');
+}
+
+// ---- Space Grotesk (Parcels display) ----
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/space-grotesk-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./fonts/space-grotesk-latin-500-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./fonts/space-grotesk-latin-600-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./fonts/space-grotesk-latin-700-normal.woff2') format('woff2');
+}
+
+// ---- Bricolage Grotesque (Daylight display) ----
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/bricolage-grotesque-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./fonts/bricolage-grotesque-latin-600-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./fonts/bricolage-grotesque-latin-700-normal.woff2') format('woff2');
+}
+
+// ---- IBM Plex Sans (shared body copy) ----
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/ibm-plex-sans-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./fonts/ibm-plex-sans-latin-500-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./fonts/ibm-plex-sans-latin-600-normal.woff2') format('woff2');
+}

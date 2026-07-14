@@ -1,0 +1,1868 @@
+// =========================================================================
+// VARIANT 3B — PARCELS
+// Irregular field-parcel grid divided by hedgerow hairlines, with one long
+// dotted "public footpath" drawn down the page by scroll. Bespoke bundle: no
+// GOV.UK CSS. All mockup inline styles are reproduced here as classes (CSP
+// forbids inline style/script). Fonts live in shared showcase-fonts.scss.
+// =========================================================================
+
+$ink: #0a1614;
+$paper: #f2f7f4;
+$green: #35c26b;
+$amber: #f5a623;
+// On-palette green links (cyan was off-scheme and failed on the green bars).
+$link: $green;
+$muted: #b9cdc4;
+$dim: #7fa89a;
+$prose: #d7e4dd;
+$display: 'Space Grotesk', sans-serif;
+$body: 'IBM Plex Sans', system-ui, sans-serif;
+$border-18: rgba(242, 247, 244, 0.18);
+$border-22: rgba(242, 247, 244, 0.22);
+$border-14: rgba(242, 247, 244, 0.14);
+$ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.par-body {
+  margin: 0;
+  background: $ink;
+  color: $paper;
+  font-family: $body;
+  -webkit-font-smoothing: antialiased;
+
+  ::selection {
+    background: $green;
+    color: $ink;
+  }
+}
+
+// Base colour for raw links only. Kept at element specificity so component
+// links (.par-btn, .par-parcel, .par-nav__link, ...) keep their own colour and
+// their hover states. At `.par-body a` this rule outranked the parcels, so on
+// hover the text went green on the green fill and vanished.
+a {
+  color: $link;
+  text-decoration-color: rgba(53, 194, 107, 0.5);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: $paper;
+  text-decoration-color: $paper;
+}
+
+// Visible keyboard focus (WCAG 2.2 AA: 2.4.7, 2.4.13).
+// Two-tone ring survives the green/paper inverts: inner $ink reads on
+// green/paper, outer $paper reads on $ink; one ring always >= 4.5:1.
+.par-body :focus-visible {
+  outline: 3px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px $ink, 0 0 0 5px $paper;
+}
+
+// Entrance: visible by default; enhanced only when JS is on.
+@keyframes par-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.js-enabled .par-fade {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.6s $ease,
+    transform 0.6s $ease;
+}
+
+.js-enabled .par-fade.in-view {
+  opacity: 1;
+  transform: none;
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .js-enabled .par-fade {
+      opacity: 1;
+      transform: none;
+      animation: par-fade-up 0.6s $ease both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+  }
+}
+
+.par-page {
+  position: relative;
+  min-height: 100vh;
+  background: $ink;
+  overflow-x: clip;
+}
+
+// ---------------- The public footpath ----------------
+.par-footpath {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.55;
+}
+
+.par-footpath__line {
+  fill: none;
+  stroke: $green;
+  stroke-width: 1.5px;
+  stroke-dasharray: 0.006 0.005;
+
+  // Default fully drawn (no-JS / reduced motion). JS sets the offset on scroll.
+  stroke-dashoffset: 0;
+  vector-effect: non-scaling-stroke;
+}
+
+.par-content {
+  position: relative;
+  z-index: 1;
+}
+
+// ---------------- Masthead (sticky) ----------------
+.par-header {
+  border-bottom: 1px solid $border-18;
+  background: rgba(10, 22, 20, 0.92);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.par-header__inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 15px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.par-brand {
+  text-decoration: none;
+  color: $paper;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  &:hover,
+  &:focus-visible {
+    color: $green;
+  }
+}
+
+// Parcels is dark: the Defra logo is reversed to paper (white) via CSS mask,
+// with no plate, so it sits directly on the dark field.
+.par-brand__logo {
+  flex: none; // stop the logo shrinking (squishing) in the flex header
+  display: block;
+  width: 92px;
+  height: 48px;
+  background-color: $paper;
+  -webkit-mask: url("images/defra-logo.svg") no-repeat center / contain;
+  mask: url("images/defra-logo.svg") no-repeat center / contain;
+}
+
+.par-brand__name {
+  font-family: $display;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  // Inherits $paper from .par-brand so the brand hover (-> $green) reaches the name.
+}
+
+.par-nav {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+  font-size: 14.5px;
+  font-weight: 500;
+}
+
+.par-nav__link {
+  color: $paper;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    color: $green;
+  }
+}
+
+// ---------------- Hero on faint survey grid ----------------
+.par-hero {
+  border-bottom: 1px solid $border-18;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(242, 247, 244, 0.035) 0 1px, transparent 1px 72px),
+    repeating-linear-gradient(90deg, rgba(242, 247, 244, 0.035) 0 1px, transparent 1px 72px);
+}
+
+.par-hero__inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 96px 26px 84px;
+}
+
+.par-hero__title {
+  font-family: $display;
+  font-weight: 700;
+  font-size: clamp(42px, 6.6vw, 96px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin: 0;
+  max-width: 13ch;
+}
+
+.par-hero__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-top: 36px;
+}
+
+.par-hero__lede {
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.6;
+  color: $muted;
+  max-width: 48ch;
+  margin: 0;
+}
+
+.par-btn {
+  flex: none;
+  background: $green;
+  color: $ink;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 14px 26px;
+
+  &:hover,
+  &:focus-visible {
+    background: $paper;
+    color: $ink;
+  }
+}
+
+// ---------------- The holding (case-study parcels) ----------------
+.par-holding {
+  max-width: 1320px;
+  margin: 52px auto 0;
+  padding: 0 26px;
+}
+
+.par-holding__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(26px, 3vw, 38px);
+  letter-spacing: -0.02em;
+  margin: 0 0 22px;
+}
+
+.par-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1px;
+  background: $border-22;
+  border: 1px solid $border-22;
+}
+
+.par-parcel {
+  background: $ink;
+  color: $paper;
+  text-decoration: none;
+  transition:
+    background 0.2s $ease,
+    color 0.2s $ease;
+}
+
+.par-parcel--flagship {
+  grid-column: span 4;
+  padding: 36px 32px 40px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 26px;
+
+  &:hover,
+  &:focus-visible {
+    background: $green;
+    color: $ink;
+  }
+}
+
+.par-parcel--plot {
+  grid-column: span 2;
+  padding: 28px 26px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  &:hover,
+  &:focus-visible {
+    background: $green;
+    color: $ink;
+  }
+}
+
+.par-fallow {
+  grid-column: span 2;
+  min-height: 140px;
+  background-color: $ink;
+  background-image: repeating-linear-gradient(-24deg, rgba(53, 194, 107, 0.14) 0 1px, transparent 1px 12px);
+}
+
+.par-parcel__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13.5px;
+}
+
+.par-parcel__meta--plot {
+  font-size: 13px;
+}
+
+.par-parcel__area {
+  opacity: 0.7;
+}
+
+.par-parcel__status {
+  font-weight: 600;
+}
+
+.par-parcel__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(21px, 2.2vw, 28px);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.par-parcel__title--flagship {
+  font-weight: 700;
+  font-size: clamp(30px, 4vw, 54px);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  margin: 0 0 16px;
+  max-width: 16ch;
+}
+
+.par-parcel__lede {
+  font-size: 15.5px;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 52ch;
+  opacity: 0.8;
+}
+
+.par-parcel__blurb {
+  font-size: 14px;
+  line-height: 1.55;
+  margin: 0;
+  opacity: 0.8;
+  flex: 1;
+}
+
+.par-parcel__cta {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.par-parcel__cta--sm {
+  font-size: 14px;
+}
+
+.par-holding__note {
+  font-size: 13px;
+  color: $dim;
+  margin: 12px 0 0;
+}
+
+// ---------------- One voice (inverted parcel) ----------------
+.par-voice {
+  max-width: 1320px;
+  margin: 84px auto 0;
+  padding: 0 26px;
+}
+
+.par-voice__fig {
+  margin: 0;
+  background: $green;
+  color: $ink;
+  padding: clamp(32px, 4.5vw, 64px);
+}
+
+.par-voice__text {
+  margin: 0;
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(24px, 3.4vw, 44px);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  max-width: 26ch;
+}
+
+.par-voice__cite {
+  margin-top: 22px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+// ---------------- How we work ----------------
+.par-how {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 88px 26px;
+}
+
+.par-how__grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(0, 2fr);
+  gap: 48px;
+}
+
+.par-how__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(26px, 3vw, 38px);
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+}
+
+.par-how__lede {
+  font-size: 15px;
+  line-height: 1.6;
+  color: $muted;
+  margin: 0;
+}
+
+.par-how__rules {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1px;
+  background: $border-22;
+  border: 1px solid $border-22;
+}
+
+.par-rule {
+  background: $ink;
+  padding: 26px 24px;
+}
+
+.par-rule__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: 18px;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+
+.par-rule__body {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: $muted;
+  margin: 0;
+}
+
+// ---------------- Blog + strategy + careers ----------------
+.par-more {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 26px 104px;
+}
+
+.par-more__grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1px;
+  background: $border-22;
+  border: 1px solid $border-22;
+}
+
+.par-more__blog {
+  grid-column: 1 / -1;
+  background: $ink;
+  padding: 30px 28px;
+}
+
+.par-more__blog-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.par-more__blog-title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(22px, 2.4vw, 30px);
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+}
+
+.par-more__all {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.par-post {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  align-items: baseline;
+  padding: 16px 0;
+  border-bottom: 1px solid $border-14;
+  text-decoration: none;
+  color: $paper;
+
+  &:hover,
+  &:focus-visible {
+    color: $green;
+  }
+}
+
+.par-post__title {
+  font-family: $display;
+  font-weight: 500;
+  font-size: 17.5px;
+  letter-spacing: -0.01em;
+}
+
+.par-post__date {
+  font-size: 13px;
+  color: $dim;
+}
+
+.par-strategy {
+  grid-column: span 3;
+  background: $ink;
+  color: $paper;
+  text-decoration: none;
+  padding: 30px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  transition:
+    background 0.2s $ease,
+    color 0.2s $ease;
+
+  &:hover,
+  &:focus-visible {
+    background: $green;
+    color: $ink;
+  }
+}
+
+.par-strategy__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(22px, 2.4vw, 30px);
+  letter-spacing: -0.02em;
+  margin: 0 0 10px;
+}
+
+.par-strategy__body {
+  font-size: 14.5px;
+  line-height: 1.6;
+  margin: 0;
+  opacity: 0.8;
+  max-width: 44ch;
+}
+
+.par-strategy__cta {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.par-careers {
+  grid-column: span 6;
+  background: $ink;
+  color: $paper;
+  text-decoration: none;
+  padding: 26px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 20px;
+  flex-wrap: wrap;
+  transition:
+    background 0.2s $ease,
+    color 0.2s $ease;
+
+  &:hover,
+  &:focus-visible {
+    background: $paper;
+    color: $ink;
+  }
+}
+
+.par-careers__text {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(20px, 2.2vw, 28px);
+  letter-spacing: -0.02em;
+}
+
+.par-careers__cta {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+// ---------------- Footer ----------------
+.par-footer {
+  border-top: 1px solid $border-18;
+  background: $ink;
+}
+
+.par-footer__inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 44px 26px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.par-footer__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+
+.par-footer__logo {
+  display: block;
+  width: 120px;
+  height: 55px;
+  background-color: $paper;
+  -webkit-mask: url("images/defra-logo.svg") no-repeat left center / contain;
+  mask: url("images/defra-logo.svg") no-repeat left center / contain;
+}
+
+.par-footer__legal {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  font-size: 13px;
+
+  a {
+    color: $paper;
+
+    &:hover,
+    &:focus-visible {
+      color: $green;
+      text-decoration: underline;
+      text-decoration-color: $green;
+      text-underline-offset: 3px;
+    }
+  }
+}
+
+.par-footer__licence {
+  font-size: 12.5px;
+  color: $dim;
+  margin: 0;
+  max-width: 80ch;
+  line-height: 1.6;
+
+  a {
+    color: $paper;
+
+    &:hover,
+    &:focus-visible {
+      color: $green;
+      text-decoration: underline;
+      text-decoration-color: $green;
+      text-underline-offset: 3px;
+    }
+  }
+}
+
+// ---------------- Case study ----------------
+.par-article {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 26px;
+}
+
+.par-breadcrumb {
+  padding: 24px 0 0;
+}
+
+.par-breadcrumb__link {
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.par-case-header {
+  margin: 28px 0 0;
+  border: 1px solid $border-22;
+}
+
+.par-case-meta {
+  background: $green;
+  color: $ink;
+  padding: 12px 24px;
+  display: flex;
+  gap: 10px 28px;
+  flex-wrap: wrap;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.par-case-header__body {
+  padding: clamp(30px, 4.5vw, 56px);
+}
+
+.par-case-title {
+  font-family: $display;
+  font-weight: 700;
+  font-size: clamp(34px, 5.4vw, 72px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin: 0;
+  max-width: 16ch;
+}
+
+.par-case-standfirst {
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.65;
+  color: $muted;
+  max-width: 58ch;
+  margin: 24px 0 0;
+}
+
+.par-outcomes {
+  margin: 24px 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1px;
+  background: $border-22;
+  border: 1px solid $border-22;
+}
+
+.par-outcome {
+  background: $ink;
+  padding: 26px 24px;
+}
+
+.par-outcome__figure {
+  font-family: $display;
+  font-weight: 700;
+  font-size: clamp(38px, 4vw, 54px);
+  letter-spacing: -0.03em;
+  color: $green;
+}
+
+.par-outcome__label {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: $muted;
+  margin: 8px 0 0;
+}
+
+.par-outcomes-note {
+  font-size: 13px;
+  color: $dim;
+  margin: 12px 0 0;
+}
+
+.par-case-body {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(220px, 1fr);
+  gap: 64px;
+  padding: 56px 0 0;
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+.par-prose {
+  font-size: 17px;
+  line-height: 1.75;
+  color: $prose;
+  max-width: 66ch;
+
+  h2 {
+    font-family: $display;
+    font-weight: 600;
+    font-size: 25px;
+    letter-spacing: -0.02em;
+    margin: 34px 0 14px;
+    color: $paper;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  p {
+    margin: 0 0 22px;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.par-case-quote {
+  margin: 42px 0;
+  background: $green;
+  color: $ink;
+  padding: clamp(24px, 3vw, 40px);
+}
+
+.par-case-quote__text {
+  margin: 0;
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(21px, 2.2vw, 28px);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.par-case-quote__cite {
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.par-facts {
+  font-size: 14px;
+  color: $muted;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: $border-22;
+  border: 1px solid $border-22;
+  align-self: start;
+}
+
+.par-fact {
+  background: $ink;
+  padding: 18px 20px;
+}
+
+.par-fact__term {
+  color: $paper;
+  font-weight: 600;
+  font-size: 13.5px;
+}
+
+.par-record {
+  margin: 72px 0 104px;
+  border: 1px solid $green;
+  padding: clamp(26px, 3vw, 44px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.par-record__text {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(20px, 2.4vw, 30px);
+  margin: 0;
+  max-width: 28ch;
+  letter-spacing: -0.02em;
+}
+
+.par-record__cta {
+  flex: none;
+  background: $green;
+  color: $ink;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 14px 26px;
+
+  &:hover,
+  &:focus-visible {
+    background: $paper;
+    color: $ink;
+  }
+}
+
+// ---------------- Content pages (register, blog, how, strategy, careers) ----
+// Parcels keeps the hairline-bordered "parcel" idiom on its inner pages, so
+// they read differently from Monument's plain tables and lists.
+.par-pagebody {
+  padding: 32px 0 104px;
+}
+
+.par-cellgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1px;
+  background: $border-22;
+  border: 1px solid $border-22;
+}
+
+.par-cellgrid--reg {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.par-cellgrid--posts {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.par-cell {
+  background: $ink;
+  padding: 26px 24px;
+}
+
+.par-regcell__ref {
+  font-family: $display;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: $dim;
+}
+
+.par-regcell__tool {
+  font-family: $display;
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+  margin: 8px 0 16px;
+  color: $paper;
+}
+
+.par-regcell__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13.5px;
+  color: $muted;
+}
+
+.par-tag {
+  font-weight: 600;
+  white-space: nowrap;
+
+  &--green {
+    color: $green;
+  }
+
+  &--amber {
+    color: $amber;
+  }
+
+  &--dim {
+    color: $dim;
+  }
+}
+
+.par-postcell__date {
+  font-size: 13px;
+  color: $dim;
+}
+
+.par-postcell__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(20px, 2.2vw, 26px);
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  margin: 8px 0 12px;
+  color: $paper;
+}
+
+.par-postcell__excerpt {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: $muted;
+  margin: 0 0 14px;
+}
+
+.par-postcell__author {
+  font-size: 13px;
+  color: $dim;
+}
+
+.par-rolecell__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: -0.01em;
+  margin: 0 0 6px;
+  color: $paper;
+}
+
+.par-rolecell__meta {
+  font-size: 13.5px;
+  color: $muted;
+  margin: 0;
+}
+
+.par-prose--pad {
+  padding-top: 40px;
+}
+
+// ---------------- Roadmap timeline (landing-page visualisation) ----------------
+.par-timeline {
+  list-style: none;
+  margin: 32px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  position: relative;
+}
+
+.par-timeline::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 9px;
+  right: 9px;
+  height: 2px;
+  background: $border-22;
+}
+
+.par-timeline__step {
+  position: relative;
+  padding-top: 42px;
+}
+
+.par-timeline__dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: $green;
+  border: 3px solid $ink;
+}
+
+.par-timeline__year {
+  position: absolute;
+  top: -3px;
+  left: 30px;
+  // Page-coloured background carves a clean gap in the connector line so it no
+  // longer clips through the digits.
+  background: $ink;
+  padding: 3px 9px;
+  font-family: $display;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1;
+  color: $green;
+}
+
+.par-timeline__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(18px, 2.2vw, 25px);
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  margin: 0 0 10px;
+}
+
+.par-timeline__body {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: $muted;
+  margin: 0;
+  max-width: 40ch;
+}
+@media (max-width: 720px) {
+  .par-timeline {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .par-timeline::before {
+    top: 9px;
+    bottom: 9px;
+    left: 8px;
+    right: auto;
+    width: 2px;
+    height: auto;
+  }
+}
+
+// =========================================================================
+// INNER PAGES REBUILT AS LAND-USE ARTIFACTS
+// Strategy = a land-use plan, how-we-work = a tool lifecycle path, careers =
+// a hiring board, blog = a featured field + hairline furrows. All line-art is
+// inline SVG (presentation attributes) or CSS hairlines; no canvas plates in
+// this variant. Amber is used for marks / large text only; small text stays
+// $paper on a solid backing (Parcels has no dark-amber token).
+// =========================================================================
+
+// ---- Shared section scaffolding ----
+.par-section {
+  margin-top: 64px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.par-section__eyebrow {
+  font-family: $display;
+  font-weight: 600;
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $dim;
+  margin: 0 0 10px;
+}
+
+.par-section__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(24px, 3vw, 34px);
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  margin: 0 0 8px;
+  color: $paper;
+}
+
+.par-section__intro {
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: $muted;
+  margin: 0 0 24px;
+  max-width: 60ch;
+}
+
+// ---- Tone tag (shared: strategy examples, careers disciplines, blog tags) ----
+// Amber small text fails on the hatch/tint, so amber tags carry $paper text
+// with an amber mark + border; the tag never relies on colour alone.
+// Keyed parcel label: a coloured western boundary rule plus an uppercase
+// surveyor field label. No fill, no swatch, square corners (map legend key).
+.par-ptag {
+  display: inline-flex;
+  align-items: center;
+  font-family: $display;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: $muted;
+  padding: 3px 0 4px 10px;
+  border: 0;
+  border-left: 3px solid $border-22;
+  background: none;
+
+  &--green {
+    color: $green;
+    border-left-color: $green;
+  }
+
+  &--amber {
+    color: $amber;
+    border-left-color: $amber;
+  }
+
+  &--dim {
+    color: $dim;
+    border-left-color: $dim;
+  }
+}
+
+// ---- Strategy: "Where we sow" (three worked field parcels) ----
+.par-sow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+}
+
+.par-sow__index {
+  font-family: $display;
+  font-weight: 600;
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  color: $dim;
+}
+
+.par-sow__area {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(19px, 2.2vw, 24px);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: $paper;
+}
+
+.par-sow__gain {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: $muted;
+  margin: 0;
+  flex: 1;
+}
+
+// ---- Strategy: "Where the hedge is" (amber hedgerow band) ----
+.par-hedge {
+  margin-top: 4px;
+  border: 1px solid rgba(245, 166, 35, 0.45);
+  background-color: $ink;
+  background-image: repeating-linear-gradient(-24deg, rgba(245, 166, 35, 0.16) 0 1px, transparent 1px 12px);
+  padding: 22px;
+}
+
+.par-hedge__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+// Text sits on a SOLID dark plate over the hatch, never directly on the hatch.
+.par-hedge__item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: $ink;
+  border: 1px solid $border-22;
+  padding: 16px 18px;
+}
+
+.par-hedge__tick {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  stroke: $amber;
+  fill: none;
+}
+
+.par-hedge__text {
+  font-size: 15px;
+  line-height: 1.5;
+  color: $paper;
+  margin: 0;
+  font-weight: 500;
+}
+
+// ---- Strategy: "How we know" trailing note under the measures rail ----
+.par-plan-next {
+  margin: 26px 0 0;
+  font-family: $display;
+  font-weight: 600;
+  font-size: 14px;
+  color: $dim;
+}
+
+// ---- How we work: principles with flagship asymmetry ----
+.par-principles {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: $border-22;
+  border: 1px solid $border-22;
+  margin-top: 4px;
+}
+
+.par-principle--flagship {
+  background: $ink;
+  border-top: 3px solid $green;
+  padding: clamp(28px, 4vw, 44px);
+}
+
+.par-flag__index {
+  font-family: $display;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: $green;
+}
+
+.par-flag__title {
+  font-family: $display;
+  font-weight: 700;
+  font-size: clamp(28px, 4vw, 46px);
+  line-height: 1.03;
+  letter-spacing: -0.025em;
+  margin: 14px 0 16px;
+  color: $paper;
+  max-width: 18ch;
+}
+
+.par-flag__body {
+  font-size: 16.5px;
+  line-height: 1.65;
+  color: $prose;
+  margin: 0;
+  max-width: 60ch;
+}
+
+.par-principles__pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: $border-22;
+}
+
+.par-pcell {
+  background: $ink;
+  padding: 26px 24px;
+}
+
+.par-pcell__index {
+  font-family: $display;
+  font-weight: 600;
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  color: $dim;
+}
+
+.par-pcell__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(18px, 2vw, 22px);
+  letter-spacing: -0.01em;
+  margin: 8px 0 10px;
+  color: $paper;
+}
+
+.par-pcell__body {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: $muted;
+  margin: 0;
+}
+
+// ---- How we work: tool lifecycle path (hairline spine + gate dots) ----
+.par-gates {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  position: relative;
+}
+
+.par-gates::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 9px;
+  width: 2px;
+  background: $border-22;
+}
+
+.par-gate {
+  position: relative;
+  padding: 0 0 30px 40px;
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+}
+
+.par-gate__dot {
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: $green;
+  border: 3px solid $ink;
+}
+
+// Fork gates (Triage, Retired): hollow amber ring = the path can leave here.
+.par-gate--fork > .par-gate__dot {
+  background: $ink;
+  border: 3px solid $amber;
+}
+
+.par-gate__name {
+  font-family: $display;
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: -0.01em;
+  margin: 0 0 6px;
+  color: $paper;
+}
+
+.par-gate__decision {
+  font-size: 15px;
+  line-height: 1.55;
+  color: $paper;
+  margin: 0 0 4px;
+}
+
+.par-gate__outcome {
+  font-size: 14px;
+  line-height: 1.55;
+  color: $muted;
+  margin: 0;
+}
+
+.par-gate__stop {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 12px;
+  background: $ink;
+  border: 1px solid rgba(245, 166, 35, 0.5);
+  padding: 8px 12px;
+}
+
+.par-gate__stop-tick {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  stroke: $amber;
+  fill: none;
+}
+
+.par-gate__stop-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: $paper;
+}
+
+// ---- Quiet closing parcel (how-we-work triage hand-off) ----
+.par-quiet {
+  margin-top: 40px;
+  border: 1px solid $border-22;
+  padding: clamp(24px, 3vw, 36px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.par-quiet__text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: $muted;
+  margin: 0;
+  max-width: 52ch;
+}
+
+.par-quiet__cta {
+  flex: none;
+  background: $green;
+  color: $ink;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 14px 26px;
+
+  &:hover,
+  &:focus-visible {
+    background: $paper;
+    color: $ink;
+  }
+}
+
+// ---- Careers: paired hiring board (Build / Understand) ----
+.par-board {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 4px;
+}
+
+.par-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.par-col__head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid;
+}
+
+.par-col--build .par-col__head {
+  border-color: $green;
+}
+
+.par-col--understand .par-col__head {
+  border-color: $amber;
+}
+
+.par-col__title {
+  font-family: $display;
+  font-weight: 700;
+  font-size: clamp(22px, 2.6vw, 30px);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.par-col--build .par-col__title {
+  color: $green;
+}
+
+.par-col--understand .par-col__title {
+  color: $amber;
+}
+
+.par-col__sub {
+  font-size: 13.5px;
+  color: $dim;
+}
+
+.par-col__roles {
+  flex: 1 1 auto;
+  display: grid;
+  grid-auto-rows: 1fr;
+  gap: 1px;
+  background: $border-22;
+  border: 1px solid $border-22;
+  margin-top: 12px;
+}
+
+.par-role {
+  background: $ink;
+  padding: 22px 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+// Camp keyline: each role is a surveyed plot with a coloured western boundary.
+.par-col--build .par-role {
+  box-shadow: inset 3px 0 0 0 $green;
+}
+
+.par-col--understand .par-role {
+  box-shadow: inset 3px 0 0 0 $amber;
+}
+
+.par-role__disc {
+  font-family: $display;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $dim;
+}
+
+.par-role__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: $paper;
+}
+
+.par-role__owns {
+  font-size: 14px;
+  line-height: 1.55;
+  color: $muted;
+  margin: 0;
+}
+
+.par-role__meta {
+  font-size: 13px;
+  color: $dim;
+  margin: 0;
+  margin-top: auto;
+}
+
+// ---- Careers: "One bar, every role" panel ----
+.par-bar-panel {
+  margin-top: 40px;
+  border: 1px solid $border-22;
+  border-top: 3px solid $green;
+  padding: clamp(26px, 3.2vw, 40px);
+}
+
+.par-bar-panel__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(20px, 2.4vw, 26px);
+  letter-spacing: -0.02em;
+  margin: 0 0 18px;
+  color: $paper;
+}
+
+.par-bar-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1px;
+  background: $border-22;
+  border: 1px solid $border-22;
+}
+
+.par-bar-item {
+  background: $ink;
+  padding: 20px 20px 22px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.par-bar-item__tick {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  stroke: $green;
+  fill: none;
+  margin-top: 1px;
+}
+
+.par-bar-item__text {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: $paper;
+  margin: 0;
+}
+
+.par-note-parcel {
+  margin-top: 20px;
+  padding: 0 2px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: $dim;
+  max-width: 82ch;
+}
+
+// ---- Blog: featured field + hairline furrow list ----
+.par-feature {
+  display: block;
+  border: 1px solid $border-22;
+  border-top: 3px solid $green;
+  padding: clamp(28px, 4vw, 48px);
+  margin-bottom: 32px;
+  color: $paper;
+}
+
+.par-feature__meta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0 0 16px;
+}
+
+.par-feature__date {
+  font-size: 13px;
+  color: $dim;
+}
+
+.par-feature__title {
+  font-family: $display;
+  font-weight: 700;
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  margin: 0 0 16px;
+  color: $paper;
+  max-width: 20ch;
+}
+
+.par-feature__excerpt {
+  font-size: clamp(16px, 1.6vw, 18px);
+  line-height: 1.65;
+  color: $prose;
+  margin: 0 0 18px;
+  max-width: 62ch;
+}
+
+.par-feature__author {
+  display: block;
+  font-size: 14px;
+  color: $muted;
+}
+
+.par-furrows {
+  border-top: 1px solid $border-22;
+}
+
+.par-blogrow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding: 26px 0;
+  border-bottom: 1px solid $border-14;
+  color: $paper;
+}
+
+.par-blogrow__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.par-blogrow__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(19px, 2.2vw, 24px);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0;
+  color: $paper;
+  max-width: 34ch;
+}
+
+.par-blogrow__date {
+  font-size: 13px;
+  color: $dim;
+  white-space: nowrap;
+}
+
+.par-blogrow__excerpt {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: $muted;
+  margin: 0;
+  max-width: 72ch;
+}
+
+.par-blogrow__foot {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.par-blogrow__author {
+  font-size: 13px;
+  color: $dim;
+}
+
+// ---- Case study: fact body spacing (replaces <br><br>) ----
+.par-fact__body {
+  margin: 8px 0 0;
+  line-height: 1.55;
+}
+
+// ---- Inner-page responsive: stack paired artifacts under ~640px ----
+@media (max-width: 640px) {
+  .par-board {
+    grid-template-columns: 1fr;
+  }
+
+  .par-col__roles {
+    grid-auto-rows: auto;
+  }
+
+  .par-principles__pair {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ---------------- Reduced motion ----------------
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    // stylelint-disable-next-line declaration-no-important
+    animation-duration: 0.01ms !important;
+    // stylelint-disable-next-line declaration-no-important
+    animation-delay: 0ms !important;
+    // stylelint-disable-next-line declaration-no-important
+    transition-duration: 0.01ms !important;
+  }
+
+  .js-enabled .par-fade {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// ---------------- Design-review bar (prototype chrome) ----------------
+.par-review {
+  background: $ink;
+  border-bottom: 2px solid $green;
+}
+
+.par-review__inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 8px 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.par-review__label {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: $dim;
+}
+
+.par-review__link {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: $paper;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    color: $green;
+  }
+}
+
+// ---------------- Skip link (accessibility) ----------------
+.par-body .par-skip-link {
+  position: absolute;
+  top: 0;
+  left: -999px;
+  z-index: 100;
+  padding: 10px 15px;
+  background: $paper;
+  color: $ink;
+  font-family: $body;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    color: $ink;
+    background: $paper;
+  }
+
+  &:focus {
+    left: 0;
+  }
+}

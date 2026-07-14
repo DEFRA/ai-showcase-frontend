@@ -1,0 +1,49 @@
+{% extends 'variants/monument.njk' %}
+
+{% block main %}
+<main id="main-content" tabindex="-1">
+  <article class="mon-article">
+    <nav aria-label="Breadcrumb" class="mon-breadcrumb">
+      <a href="/monument" class="mon-breadcrumb__link">&larr; AI at Defra</a>
+    </nav>
+
+    <header class="mon-case-header">
+      <h1 class="mon-case-title">From the team</h1>
+      <p class="mon-case-standfirst">Working notes from the people building and assuring AI at Defra. We publish what we learn, including the things that did not work.</p>
+    </header>
+
+    <div class="mon-content">
+      {% set lead = posts[0] %}
+      <article class="mon-feature">
+        <div class="mon-feature__scene">
+          <canvas data-seed="{{ lead.title }}" data-plate="drill" aria-hidden="true" class="mon-plate"></canvas>
+        </div>
+        <div class="mon-feature__body">
+          <p class="mon-feature__kicker">Latest note &middot; {{ lead.date }}</p>
+          <h2 class="mon-feature__title">{{ lead.title }}</h2>
+          <p class="mon-feature__excerpt">{{ lead.excerpt }}</p>
+          <div class="mon-feature__meta">
+            <span class="mon-byline">{{ lead.author }}</span>
+            <span>{{ lead.readingTime }} read</span>
+          </div>
+        </div>
+      </article>
+
+      <ul class="mon-postlist">
+        {% for post in posts %}
+        {% if not loop.first %}
+        <li class="mon-postlist__item">
+          <div class="mon-postlist__meta">
+            <span class="mon-postlist__date">{{ post.date }} &middot; {{ post.readingTime }} read</span>
+          </div>
+          <h2 class="mon-postlist__title">{{ post.title }}</h2>
+          <p class="mon-postlist__excerpt">{{ post.excerpt }}</p>
+          <span class="mon-postlist__author">{{ post.author }}</span>
+        </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  </article>
+</main>
+{% endblock %}

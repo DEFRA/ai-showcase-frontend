@@ -1,0 +1,118 @@
+{% extends 'variants/parcels.njk' %}
+
+{% block main %}
+<main id="main-content" tabindex="-1">
+  <section class="par-hero">
+    <div class="par-hero__inner">
+      <h1 class="par-hero__title">Our plan for AI, 2026 to 2028</h1>
+      <div class="par-hero__row">
+        <p class="par-hero__lede">Where we will use AI on the environment, food and farming, where we will not, and how we will know it is working. Built in the open, measured against a baseline, retired when it stops earning its keep.</p>
+        <a href="/parcels/strategy" class="par-btn">Read the full plan</a>
+      </div>
+    </div>
+  </section>
+
+  <section aria-label="Roadmap" class="par-holding">
+    <h2 class="par-holding__title">The plan, three years out</h2>
+    <ol class="par-timeline">
+      <li class="par-timeline__step">
+        <span class="par-timeline__dot" aria-hidden="true"></span>
+        <span class="par-timeline__year">2026</span>
+        <h3 class="par-timeline__title">Prove the AI in the field</h3>
+        <p class="par-timeline__body">AI pilots on real farms and rivers, each measured against a baseline agreed before it starts. Autonomous machinery, flood forecasting, livestock monitoring.</p>
+      </li>
+      <li class="par-timeline__step">
+        <span class="par-timeline__dot" aria-hidden="true"></span>
+        <span class="par-timeline__year">2027</span>
+        <h3 class="par-timeline__title">Scale the AI that works</h3>
+        <p class="par-timeline__body">Expand the AI pilots that beat their baseline and switch off the ones that do not. Publish what moved and what did not.</p>
+      </li>
+      <li class="par-timeline__step">
+        <span class="par-timeline__dot" aria-hidden="true"></span>
+        <span class="par-timeline__year">2028</span>
+        <h3 class="par-timeline__title">AI worth its footprint</h3>
+        <p class="par-timeline__body">Every live AI model earns its energy and its keep. We track the cost and retire what no longer pays its way.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section id="cases" aria-label="Case studies" class="par-holding">
+    <h2 class="par-holding__title">What we're building</h2>
+    <div class="par-grid">
+      {% set flag = caseStudies[0] %}
+      <a href="/parcels/air-quality" class="par-parcel par-parcel--flagship">
+        <div class="par-parcel__meta">
+          <span class="par-parcel__area">{{ flag.area }}, flagship pilot</span>
+          <span class="par-parcel__status">{{ flag.status }}</span>
+        </div>
+        <div>
+          <h3 class="par-parcel__title par-parcel__title--flagship">{{ flag.title }}</h3>
+          <p class="par-parcel__lede">{{ flag.summaryParcels }}</p>
+        </div>
+        <span class="par-parcel__cta">Read the case study &rarr;</span>
+      </a>
+
+      <div aria-hidden="true" class="par-parcel par-fallow"></div>
+
+      {% for cs in caseStudies %}
+      {% if not loop.first %}
+      <a href="/parcels/air-quality" class="par-parcel par-parcel--plot">
+        <div class="par-parcel__meta par-parcel__meta--plot">
+          <span class="par-parcel__area">{{ cs.area }}</span>
+          <span class="par-parcel__status">{{ cs.status }}</span>
+        </div>
+        <h3 class="par-parcel__title">{{ cs.title }}</h3>
+        <p class="par-parcel__blurb">{{ cs.summaryParcels }}</p>
+        <span class="par-parcel__cta par-parcel__cta--sm">Read &rarr;</span>
+      </a>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="par-voice">
+    <figure class="par-voice__fig par-fade">
+      <blockquote class="par-voice__text">&ldquo;The forecast used to land after lunch. Now it's there before the school run, and it tells me why.&rdquo;</blockquote>
+      <figcaption class="par-voice__cite">Environmental health officer, Sheffield City Council, on the air quality pilot</figcaption>
+    </figure>
+  </section>
+
+  <section class="par-how">
+    <div class="par-how__grid">
+      <div class="par-how__intro">
+        <h2 class="par-how__title">How we work</h2>
+        <p class="par-how__lede">Three rules that hold on every plot.</p>
+      </div>
+      <div class="par-how__rules">
+        {% for p in principles %}
+        <div class="par-rule">
+          <h3 class="par-rule__title">{{ p.title }}</h3>
+          <p class="par-rule__body">{{ p.body }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="par-more">
+    <div class="par-more__grid">
+      <div class="par-more__blog">
+        <div class="par-more__blog-head">
+          <h2 class="par-more__blog-title">From the team</h2>
+          <a href="/parcels/blog" class="par-more__all">All posts &rarr;</a>
+        </div>
+        {% for post in posts %}
+        <a href="/parcels/blog" class="par-post">
+          <span class="par-post__title">{{ post.title }}</span>
+          <span class="par-post__date">{{ post.date }}</span>
+        </a>
+        {% endfor %}
+      </div>
+      <a href="/parcels/careers" class="par-careers">
+        <span class="par-careers__text">Build AI you&rsquo;d put your name to. Join Defra's AI teams</span>
+        <span class="par-careers__cta">Current AI openings &rarr;</span>
+      </a>
+    </div>
+  </section>
+</main>
+{% endblock %}

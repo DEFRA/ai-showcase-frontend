@@ -1,0 +1,122 @@
+{% extends 'variants/monument.njk' %}
+
+{% block main %}
+<main id="main-content" tabindex="-1">
+  <section class="mon-hero">
+    <div class="mon-hero__inner">
+      <div class="mon-hero__copy">
+        <h1 class="mon-hero__title">AI, out working the land<span class="mon-accent">.</span></h1>
+        <p class="mon-hero__lede">How Defra is putting AI to work in the field: autonomous machinery, flood defences that decide when to act, and a closer watch on crops and livestock. People stay in charge of every decision.</p>
+        <div class="mon-hero__actions">
+          <a href="/monument/autonomous-tractors" class="mon-btn">Start with the case studies</a>
+          <a href="#mon-how" class="mon-btn mon-btn--ghost">How we work</a>
+        </div>
+      </div>
+      <div class="mon-hero__scene">
+        <canvas data-seed="AI at Defra fields" data-plate="parcels" aria-hidden="true" class="mon-plate"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <section aria-label="Case studies" class="mon-cases">
+    <div class="mon-cases__head">
+      <h2 class="mon-cases__title">In the field</h2>
+    </div>
+
+    <a href="/monument/autonomous-tractors" class="mon-flagship mon-fade">
+      <div class="mon-flagship__scene">
+        <canvas data-seed="Tractors that work the field on their own" data-plate="furrows" aria-hidden="true" class="mon-plate"></canvas>
+      </div>
+      <div class="mon-flagship__body">
+        <div class="mon-flagship__meta">
+          <span class="mon-tag mon-tag--green">Live pilot</span>
+          <span class="mon-area">Autonomous machinery</span>
+        </div>
+        <h3 class="mon-flagship__title">Tractors that work the field on their own</h3>
+        <p class="mon-flagship__summary">Driverless tractors follow a planned route across the field, drilling and hoeing through the night. Vision models watch the ground ahead and stop for anything that should not be there.</p>
+        <p class="mon-flagship__how"><b>Where the AI acts:</b> it plans the route and reads the cameras in real time. One named operator supervises several machines from a single screen and can take control of any of them.</p>
+        <span class="mon-flagship__cta">Read the case study &rarr;</span>
+      </div>
+    </a>
+
+    <div class="mon-grid">
+      <a href="/monument/autonomous-tractors" class="mon-field mon-fade">
+        <div class="mon-field__scene">
+          <canvas data-seed="Flood barriers that know when to rise" data-plate="canopy" aria-hidden="true" class="mon-plate"></canvas>
+        </div>
+        <div class="mon-field__meta">
+          <span class="mon-tag mon-tag--green">Pilot</span>
+          <span class="mon-area">Flood defence</span>
+        </div>
+        <h3 class="mon-field__title">Flood barriers that know when to rise</h3>
+        <p class="mon-field__summary">A model reads river levels and rainfall and recommends when to raise a barrier, hours before a person watching the gauges could. A duty officer authorises every activation.</p>
+        <span class="mon-field__cta">Read &rarr;</span>
+      </a>
+
+      <a href="/monument/autonomous-tractors" class="mon-field mon-fade">
+        <div class="mon-field__scene">
+          <canvas data-seed="Spotting a sick animal before the farmer can" data-plate="drill" aria-hidden="true" class="mon-plate"></canvas>
+        </div>
+        <div class="mon-field__meta">
+          <span class="mon-tag mon-tag--amber">Discovery</span>
+          <span class="mon-area">Animal husbandry</span>
+        </div>
+        <h3 class="mon-field__title">Spotting a sick animal before the farmer can</h3>
+        <p class="mon-field__summary">Cameras over the pens learn each animal's normal gait and feeding. When one starts to limp or hang back, the stockperson gets an early flag. The care stays with people.</p>
+        <span class="mon-field__cta">Read &rarr;</span>
+      </a>
+
+      <a href="/monument/autonomous-tractors" class="mon-field mon-fade">
+        <div class="mon-field__scene">
+          <canvas data-seed="Spraying the weed, not the whole field" data-plate="parcels" aria-hidden="true" class="mon-plate"></canvas>
+        </div>
+        <div class="mon-field__meta">
+          <span class="mon-tag mon-tag--green">Pilot</span>
+          <span class="mon-area">Precision farming</span>
+        </div>
+        <h3 class="mon-field__title">Spraying the weed, not the whole field</h3>
+        <p class="mon-field__summary">A camera on the boom tells each nozzle to fire only over a weed, cutting the herbicide used across a field by most of it. Less reaches the soil and the watercourse.</p>
+        <span class="mon-field__cta">Read &rarr;</span>
+      </a>
+    </div>
+  </section>
+
+  <section id="mon-how" class="mon-how">
+    <div class="mon-how__inner">
+      <h2 class="mon-how__title">How we work</h2>
+      <div class="mon-how__grid">
+        {% for p in principles %}
+        <div class="mon-fade">
+          <h3 class="mon-principle__title">{{ p.title }}</h3>
+          <p class="mon-principle__body">{{ p.body }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="mon-blog">
+    <div class="mon-blog__head">
+      <h2 class="mon-blog__title">From the team</h2>
+      <a href="/monument/blog" class="mon-blog__all">All posts &rarr;</a>
+    </div>
+    {% for post in posts %}
+    <a href="/monument/blog" class="mon-post">
+      <span class="mon-post__title">{{ post.title }}</span>
+      <span class="mon-post__date">{{ post.date }}</span>
+    </a>
+    {% endfor %}
+  </section>
+
+  <section class="mon-doors">
+    <a href="/monument/strategy" class="mon-door mon-door--green">
+      <h3 class="mon-door__title">Our plan for AI, 2026 to 2028</h3>
+      <p class="mon-door__body">Where we will and won't use AI, and how we'll know it's working.</p>
+    </a>
+    <a href="/monument/careers" class="mon-door mon-door--light">
+      <h3 class="mon-door__title">Build AI you'd put your name to</h3>
+      <p class="mon-door__body">Engineers, data scientists and designers building AI. Current openings across Defra's AI teams.</p>
+    </a>
+  </section>
+</main>
+{% endblock %}

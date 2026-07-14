@@ -1,0 +1,102 @@
+{% extends 'variants/daylight.njk' %}
+
+{% block main %}
+<main id="main-content" tabindex="-1">
+  <article class="day-article">
+    <nav aria-label="Breadcrumb" class="day-breadcrumb">
+      <a href="/daylight" class="day-breadcrumb__link">&larr; AI at Defra</a>
+    </nav>
+  </article>
+
+  <div class="day-pagehead">
+    <h1 class="day-pagehead__title">Our plan for AI, 2026 to 2028</h1>
+    <p class="day-pagehead__lede">Where we will use AI, where we will not, and how we will know it is working. A short public summary of the full strategy.</p>
+  </div>
+
+  <div class="day-canvas">
+    <div class="day-intro">
+      <div class="day-intro__text">
+        <p>We use AI to give staff and the public earlier, clearer information about the environment, food and farming, without ever handing a decision to a machine.</p>
+      </div>
+      <div class="day-intro__plate">
+        <canvas data-seed="Our plan for AI 2026 to 2028" data-plate="flow" aria-hidden="true" class="day-plate"></canvas>
+      </div>
+    </div>
+
+    <section class="day-blockgap" aria-labelledby="dl-ledger-h">
+      <h2 id="dl-ledger-h" class="day-block-head">What we will and won&rsquo;t do</h2>
+      <div class="day-ledger">
+        <div class="day-ledger__col day-ledger__col--will">
+          <p class="day-ledger__head">We will</p>
+          <ul class="day-ledger__list">
+            {% for f in strategy.focus %}
+            <li class="day-ledger__item day-ledger__item--will">
+              <span class="day-ledger__line">{{ f.area }}</span>
+              <span class="day-ledger__gain">{{ f.gain }}</span>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="day-ledger__col day-ledger__col--wont">
+          <p class="day-ledger__head">We won&rsquo;t</p>
+          <ul class="day-ledger__list">
+            {% for b in strategy.boundaries %}
+            <li class="day-ledger__item day-ledger__item--wont">
+              <span class="day-ledger__line">{{ b }}</span>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="day-blockgap" aria-labelledby="dl-gantt-h">
+      <h2 id="dl-gantt-h" class="day-block-head">The three-year plan</h2>
+      <ul class="day-vh">
+        {% for t in strategy.tracks %}
+        <li>{{ t.name }}: {{ t.phase }}, {{ t.from }} to {{ t.to }}.</li>
+        {% endfor %}
+        <li>{{ strategy.milestone.label }}: {{ strategy.milestone.at }}.</li>
+      </ul>
+      <div class="day-roadmap-scroll">
+        <div class="day-roadmap" aria-hidden="true">
+          <div class="day-roadmap__row day-roadmap__row--head">
+            <span class="day-roadmap__label"></span>
+            <span class="day-roadmap__lane day-roadmap__lane--head">
+              <span class="day-roadmap__year">2026</span>
+              <span class="day-roadmap__year">2027</span>
+              <span class="day-roadmap__year">2028</span>
+            </span>
+          </div>
+          {% for t in strategy.tracks %}
+          <div class="day-roadmap__row">
+            <span class="day-roadmap__label"><span class="day-roadmap__name">{{ t.name }}</span></span>
+            <span class="day-roadmap__lane">
+              <span class="day-roadmap__bar day-roadmap__bar--y{{ t.from }}{{ t.to }} day-roadmap__bar--{{ t.state }}">{{ t.phase }}</span>
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <p class="day-roadmap__note">
+        <span class="day-roadmap__keyitem"><span class="day-roadmap__key day-roadmap__key--solid" aria-hidden="true"></span>Committed work</span>
+        <span class="day-roadmap__keyitem"><span class="day-roadmap__key day-roadmap__key--planned" aria-hidden="true"></span>Still in discovery</span>
+        <span class="day-roadmap__milestone">Next public update: {{ strategy.milestone.at }}</span>
+      </p>
+    </section>
+
+    <section class="day-blockgap" aria-labelledby="dl-measure-h">
+      <h2 id="dl-measure-h" class="day-block-head">How we will know it is working</h2>
+      <ol class="day-measure">
+        {% for m in strategy.measures %}
+        <li class="day-measure__node">
+          <span class="day-measure__dot" aria-hidden="true"></span>
+          <h3 class="day-measure__term">{{ m.term }}</h3>
+          <p class="day-measure__body">{{ m.body }}</p>
+        </li>
+        {% endfor %}
+      </ol>
+    </section>
+  </div>
+</main>
+{% endblock %}

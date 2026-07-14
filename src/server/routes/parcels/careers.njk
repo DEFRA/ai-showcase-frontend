@@ -1,0 +1,83 @@
+{% extends 'variants/parcels.njk' %}
+
+{% block main %}
+<main id="main-content" tabindex="-1">
+  <article class="par-article">
+    <nav aria-label="Breadcrumb" class="par-breadcrumb">
+      <a href="/parcels" class="par-breadcrumb__link">&larr; AI at Defra</a>
+    </nav>
+
+    <header class="par-case-header">
+      <div class="par-case-header__body">
+        <h1 class="par-case-title">Build AI you&rsquo;d put your name to</h1>
+        <p class="par-case-standfirst">Defra's AI teams build and assure the AI used on the environment, food and farming. We hire to one bar, split across two kinds of work. Every one is an AI role, and the decisions stay with people.</p>
+      </div>
+    </header>
+
+    <div class="par-pagebody">
+      <section class="par-section" aria-label="Current openings">
+        <p class="par-section__eyebrow">Current openings</p>
+        <h2 class="par-section__title">Two kinds of work, one team</h2>
+        <p class="par-section__intro">Some of us build the models. Some of us make sure people can work with them. Both are the job.</p>
+        <div class="par-board">
+          <div class="par-col par-col--build">
+            <div class="par-col__head">
+              <h3 class="par-col__title">Build</h3>
+              <span class="par-col__sub">Science and engineering</span>
+            </div>
+            <div class="par-col__roles">
+              {% for r in roles %}
+              {% if r.tone == 'green' %}
+              <div class="par-role">
+                <span class="par-role__disc">{{ r.discipline }}</span>
+                <h4 class="par-role__title">{{ r.title }}</h4>
+                <p class="par-role__owns">{{ r.owns }}.</p>
+                <p class="par-role__meta">{{ r.location }} &middot; closes {{ r.closing }}</p>
+              </div>
+              {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="par-col par-col--understand">
+            <div class="par-col__head">
+              <h3 class="par-col__title">Understand</h3>
+              <span class="par-col__sub">Design and research</span>
+            </div>
+            <div class="par-col__roles">
+              {% for r in roles %}
+              {% if r.tone == 'amber' %}
+              <div class="par-role">
+                <span class="par-role__disc">{{ r.discipline }}</span>
+                <h4 class="par-role__title">{{ r.title }}</h4>
+                <p class="par-role__owns">{{ r.owns }}.</p>
+                <p class="par-role__meta">{{ r.location }} &middot; closes {{ r.closing }}</p>
+              </div>
+              {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="par-bar-panel" aria-label="One bar, every role">
+        <h2 class="par-bar-panel__title">One bar, every role</h2>
+        <ul class="par-bar-list">
+          {% for h in hiringBar %}
+          <li class="par-bar-item">
+            <svg class="par-bar-item__tick" viewBox="0 0 24 24" aria-hidden="true">
+              <polyline points="4,12.5 10,18.5 20,6" fill="none" stroke-width="2.2"></polyline>
+            </svg>
+            <p class="par-bar-item__text">{{ h }}</p>
+          </li>
+          {% endfor %}
+        </ul>
+      </section>
+
+      <div class="par-note-parcel">
+        Roles are advertised through Civil Service Jobs and sifted against the Success Profiles behaviours, with named priority behaviours set per role rather than fixed weightings.
+      </div>
+    </div>
+  </article>
+</main>
+{% endblock %}

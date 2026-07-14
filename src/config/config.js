@@ -44,7 +44,7 @@ export const config = convict({
   serviceName: {
     doc: 'Applications Service Name',
     format: String,
-    default: 'ai-showcase-frontend'
+    default: 'AI at Defra'
   },
   root: {
     doc: 'Project root',

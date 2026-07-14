@@ -1,0 +1,77 @@
+{% extends 'variants/daylight.njk' %}
+
+{% block main %}
+<main id="main-content" tabindex="-1">
+  <article class="day-article">
+    <nav aria-label="Breadcrumb" class="day-breadcrumb">
+      <a href="/daylight" class="day-breadcrumb__link">&larr; AI at Defra</a>
+    </nav>
+  </article>
+
+  <div class="day-pagehead">
+    <h1 class="day-pagehead__title">Build AI you&rsquo;d put your name to</h1>
+    <p class="day-pagehead__lede">Defra&rsquo;s AI teams build and assure the AI used on the environment, food and farming. We are not yet one unit, but we hire to the same bar. Engineers, scientists, designers and researchers, every one an AI role. The decisions stay with people.</p>
+  </div>
+
+  <div class="day-canvas">
+    <section aria-labelledby="dl-roster-h">
+      <h2 id="dl-roster-h" class="day-block-head">Current AI openings</h2>
+      <div class="day-roster">
+        {% for r in roles %}
+        <div class="day-roster__row">
+          <div class="day-roster__main">
+            <span class="day-roster__tag day-roster__tag--{{ r.tone }}">{{ r.discipline }}</span>
+            <h3 class="day-roster__title">{{ r.title }}</h3>
+            <p class="day-roster__meta">{{ r.area }} &middot; {{ r.band }} &middot; {{ r.location }}</p>
+            <p class="day-roster__owns">{{ r.owns }}</p>
+          </div>
+          <div class="day-roster__aside">
+            <span class="day-roster__salary">{{ r.salary }}</span>
+            <span class="day-roster__closing">Closes {{ r.closing }}</span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="day-blockgap" aria-labelledby="dl-hire-h">
+      <h2 id="dl-hire-h" class="day-block-head">How hiring runs</h2>
+      <div class="day-rail">
+        <svg class="day-rail__spine" viewBox="0 0 1000 2" preserveAspectRatio="none" aria-hidden="true">
+          <rect x="0" y="0" width="1000" height="2"></rect>
+        </svg>
+        <ol class="day-rail__stages">
+          {% for s in hiringStages %}
+          <li class="day-rail__stage">
+            <span class="day-rail__dot" aria-hidden="true"></span>
+            <span class="day-rail__name">{{ s.stage }}</span>
+            <span class="day-rail__detail">{{ s.detail }}</span>
+            {% if s.days %}<span class="day-rail__days">{{ s.days }}</span>{% endif %}
+          </li>
+          {% endfor %}
+        </ol>
+      </div>
+    </section>
+
+    <section class="day-blockgap" aria-labelledby="dl-look-h">
+      <h2 id="dl-look-h" class="day-block-head">What we look for</h2>
+      {% set lookNames = ['Openness', 'Judgement', 'No barriers'] %}
+      <div class="day-look">
+        {% for b in hiringBar %}
+        <div class="day-priority">
+          <h3 class="day-priority__name">{{ lookNames[loop.index0] }}</h3>
+          <p class="day-priority__body">{{ b }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+
+  <section class="day-voice">
+    <figure class="day-voice__fig">
+      <blockquote class="day-voice__text">&ldquo;We hire people who are comfortable when the answer is <span class="day-accent">don&rsquo;t use AI</span>.&rdquo;</blockquote>
+      <figcaption class="day-voice__cite">Defra&rsquo;s AI teams, on how we hire</figcaption>
+    </figure>
+  </section>
+</main>
+{% endblock %}

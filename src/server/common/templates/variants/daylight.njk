@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ pageTitle }} | AI at Defra</title>
+  <meta name="robots" content="noindex">
+  <link href="{{ getAssetPath('src/client/stylesheets/showcase-fonts.scss') }}" rel="stylesheet">
+  <link href="{{ getAssetPath('src/client/stylesheets/daylight.scss') }}" rel="stylesheet">
+</head>
+<body class="day-body">
+  <a href="#main-content" class="day-skip-link">Skip to main content</a>
+  <div class="day-page">
+    <div class="day-review">
+      <div class="day-review__inner">
+        <span class="day-review__label">Design review</span>
+        <a href="/" class="day-review__link">&larr; All variants</a>
+      </div>
+    </div>
+    <header class="day-header">
+      <div class="day-header__inner">
+        <a href="/daylight" class="day-brand" aria-label="AI at Defra, Department for Environment, Food and Rural Affairs">
+          <span class="day-brand__logo" aria-hidden="true"></span>
+          <span aria-hidden="true" class="day-brand__divider"></span>
+          <span class="day-brand__name">AI at Defra</span>
+        </a>
+        <nav aria-label="Primary" class="day-nav">
+          <a href="/daylight" class="day-nav__link">Case studies</a>
+          <a href="/daylight/blog" class="day-nav__link">Blog</a>
+          <a href="/daylight/how-we-work" class="day-nav__link">How we work</a>
+          <a href="/daylight/strategy" class="day-nav__link">Strategy</a>
+          <a href="/daylight/careers" class="day-nav__link">Careers</a>
+        </nav>
+      </div>
+    </header>
+
+    {% block main %}{% endblock %}
+
+    <footer class="day-footer">
+      <div class="day-footer__inner">
+        <div class="day-footer__row">
+          <span class="day-footer__logo" role="img" aria-label="Department for Environment, Food and Rural Affairs"></span>
+          <nav aria-label="Legal" class="day-footer__legal">
+            <a href="#">Privacy</a>
+            <a href="#">Cookies</a>
+            <a href="#">Accessibility statement</a>
+            <a href="#">Contact</a>
+          </nav>
+        </div>
+        <p class="day-footer__licence">All content is available under the <a href="#">Open Government Licence v3.0</a>, except where otherwise stated. &copy; Crown copyright 2026. Built in the open. The source for this site is on GitHub.</p>
+      </div>
+    </footer>
+  </div>
+  <script type="module" src="{{ getAssetPath('src/client/javascripts/daylight.js') }}"></script>
+</body>
+</html>

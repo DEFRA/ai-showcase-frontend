@@ -1,0 +1,116 @@
+{% extends 'variants/daylight.njk' %}
+
+{% block main %}
+<main id="main-content" tabindex="-1">
+  <section class="day-hero">
+    <div class="day-hero__inner">
+      <div class="day-hero__copy">
+        <h1 class="day-hero__title">Putting AI to work on the environment, food and farming</h1>
+        <p class="day-hero__lede">We build and assure the AI Defra uses to forecast pollution, sort the cases that need a person, and read the land from above. The AI advises. People decide.</p>
+        <div class="day-hero__actions">
+          <a href="/daylight/careers" class="day-btn day-btn--solid">See current openings</a>
+          <a href="#cases" class="day-btn day-btn--outline">See our work</a>
+        </div>
+      </div>
+      <div class="day-hero__plate">
+        <canvas data-seed="Environment food and farming" data-plate="strata" aria-hidden="true" class="day-plate"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <section aria-label="Careers" class="day-cases day-cases--lead">
+    <div class="day-cases__head">
+      <h2 class="day-cases__title">Current AI openings</h2>
+      <a href="/daylight/careers" class="day-blog__all">How we hire &rarr;</a>
+    </div>
+    <div class="day-roles">
+      <div class="day-role">
+        <h3 class="day-role__title">Machine learning scientist</h3>
+        <p class="day-role__meta">Environmental AI models. London or remote.</p>
+      </div>
+      <div class="day-role">
+        <h3 class="day-role__title">Machine learning engineer</h3>
+        <p class="day-role__meta">Geospatial AI. London, Bristol or remote.</p>
+      </div>
+      <div class="day-role">
+        <h3 class="day-role__title">Designer, AI services</h3>
+        <p class="day-role__meta">AI in public-facing services. Hybrid.</p>
+      </div>
+      <div class="day-role">
+        <h3 class="day-role__title">User researcher, AI</h3>
+        <p class="day-role__meta">How people work with AI tools. 12 months, hybrid.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="cases" aria-label="Case studies" class="day-cases">
+    <div class="day-cases__head">
+      <h2 class="day-cases__title">Our work</h2>
+      <p class="day-cases__note">Four projects, from live pilots to early discovery.</p>
+    </div>
+    {% set plates = ['wave', 'grid', 'rings', 'flow'] %}
+    {% for cs in caseStudies %}
+    <a href="/daylight/air-quality" class="day-case {{ 'day-case--even' if loop.index0 % 2 == 0 else 'day-case--odd' }}">
+      <div class="day-case__text">
+        <div class="day-case__meta">
+          <span class="day-case__status">{{ cs.status }}</span>
+          <span class="day-case__area">{{ cs.area }}</span>
+        </div>
+        <h3 class="day-case__title">{{ cs.title }}</h3>
+        <p class="day-case__summary">{{ cs.summaryDaylight }}</p>
+        <span class="day-case__cta">Read the case study &rarr;</span>
+      </div>
+      <div class="day-case__plate">
+        <canvas data-seed="{{ cs.title }}" data-plate="{{ plates[loop.index0 % 4] }}" aria-hidden="true" class="day-plate"></canvas>
+      </div>
+    </a>
+    {% endfor %}
+    <div aria-hidden="true" class="day-rule"></div>
+  </section>
+
+  <section class="day-voice">
+    <figure class="day-voice__fig day-fade">
+      <blockquote class="day-voice__text">&ldquo;The forecast used to land after lunch. Now it's there before the school run, <span class="day-accent">and it tells me why</span>.&rdquo;</blockquote>
+      <figcaption class="day-voice__cite">Environmental health officer, Sheffield City Council, on the air quality pilot</figcaption>
+    </figure>
+  </section>
+
+  <section id="dl-how" class="day-how">
+    <div class="day-how__inner">
+      <h2 class="day-how__title">How we work</h2>
+      <div class="day-how__grid">
+        {% for p in principles %}
+        <div class="day-fade">
+          <h3 class="day-principle__title">{{ p.title }}</h3>
+          <p class="day-principle__body">{{ p.body }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="day-blog">
+    <div class="day-blog__head">
+      <h2 class="day-blog__title">From the team</h2>
+      <a href="/daylight/blog" class="day-blog__all">All posts &rarr;</a>
+    </div>
+    {% for post in posts %}
+    <a href="/daylight/blog" class="day-post">
+      <span class="day-post__title">{{ post.title }}</span>
+      <span class="day-post__date">{{ post.date }}</span>
+    </a>
+    {% endfor %}
+  </section>
+
+  <section class="day-doors">
+    <a href="/daylight/strategy" class="day-door">
+      <h3 class="day-door__title">Our plan for AI, 2026 to 2028</h3>
+      <p class="day-door__body">Where we will and won't use AI, and how we'll know it's working.</p>
+    </a>
+    <a href="/daylight/careers" class="day-door">
+      <h3 class="day-door__title">Life in Defra's AI teams</h3>
+      <p class="day-door__body">How we hire, how we work, and what we're looking for.</p>
+    </a>
+  </section>
+</main>
+{% endblock %}

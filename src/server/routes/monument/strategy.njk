@@ -1,0 +1,71 @@
+{% extends 'variants/monument.njk' %}
+
+{% block main %}
+<main id="main-content" tabindex="-1">
+  <article class="mon-article">
+    <nav aria-label="Breadcrumb" class="mon-breadcrumb">
+      <a href="/monument" class="mon-breadcrumb__link">&larr; AI at Defra</a>
+    </nav>
+
+    <header class="mon-case-header">
+      <h1 class="mon-case-title">Our plan for AI, 2026 to 2028</h1>
+      <p class="mon-case-standfirst">A short, public summary of where AI helps Defra, where it will not, and how we will know it is working. Every decision stays with a person.</p>
+    </header>
+
+    <div class="mon-content">
+      <section class="mon-section" aria-labelledby="strat-will">
+        <h2 class="mon-block-title" id="strat-will">Where we will use AI</h2>
+        <p class="mon-block-intro">Three kinds of problem where AI earns its place, each already tested on real Defra work.</p>
+        <div class="mon-strata">
+          {% set strataPlates = ['canopy', 'drill', 'parcels'] %}
+          {% for f in strategy.focus %}
+          {% set t = strategy.tracks[loop.index0] %}
+          <div class="mon-strata__band">
+            <div class="mon-strata__scene">
+              <canvas data-seed="{{ f.area }}" data-plate="{{ strataPlates[loop.index0 % 3] }}" aria-hidden="true" class="mon-plate"></canvas>
+            </div>
+            <div class="mon-strata__body">
+              <h3 class="mon-strata__area">{{ f.area }}</h3>
+              <p class="mon-strata__gain">{{ f.gain }}</p>
+            </div>
+            <div class="mon-strata__meta">
+              <span class="mon-strata__eg">In the field: {{ f.example }}</span>
+              <span class="mon-strata__run">{{ t.phase }}, {{ t.from }} to {{ t.to }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="mon-boundary" aria-labelledby="strat-wont">
+        <h2 class="mon-boundary__title" id="strat-wont">Where we will not use AI</h2>
+        <p class="mon-boundary__intro">Some calls stay with a person, whatever a model could do. These are the lines we will not cross, whatever the tool can offer.</p>
+        <ul class="mon-boundary__list">
+          {% for b in strategy.boundaries %}
+          <li class="mon-boundary__item">
+            <svg class="mon-boundary__mark" viewBox="0 0 34 34" role="presentation" aria-hidden="true" focusable="false">
+              <circle class="mon-boundary__ring" cx="17" cy="17" r="14" />
+              <line class="mon-boundary__slash" x1="8" y1="8" x2="26" y2="26" />
+            </svg>
+            <p class="mon-boundary__text">{{ b }}</p>
+          </li>
+          {% endfor %}
+        </ul>
+      </section>
+
+      <section class="mon-section" aria-labelledby="strat-how">
+        <h2 class="mon-block-title" id="strat-how">How we will know it is working</h2>
+        <div class="mon-measures">
+          {% for m in strategy.measures %}
+          <div class="mon-measure">
+            <p class="mon-measure__term">{{ m.term }}</p>
+            <p class="mon-measure__body">{{ m.body }}</p>
+          </div>
+          {% endfor %}
+        </div>
+        <p class="mon-measure__next">We publish our next public update in Spring 2027.</p>
+      </section>
+    </div>
+  </article>
+</main>
+{% endblock %}
