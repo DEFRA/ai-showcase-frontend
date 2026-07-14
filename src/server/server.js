@@ -5,6 +5,7 @@ import Scooter from '@hapi/scooter'
 import { router } from './plugins/router.js'
 import { config } from '#/config/config.js'
 import { pulse } from './plugins/pulse.js'
+import { prototypeAuth } from './plugins/prototype-auth.js'
 import { catchAll } from './common/helpers/errors.js'
 import { nunjucksConfig } from '#/config/nunjucks/nunjucks.js'
 import { requestTracing } from './plugins/request-tracing.js'
@@ -55,6 +56,7 @@ export async function createServer() {
   await server.register([
     requestLogger,
     requestTracing,
+    prototypeAuth,
     metrics,
     secureContext,
     pulse,
