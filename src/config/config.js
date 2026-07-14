@@ -123,9 +123,9 @@ export const config = convict({
   session: {
     cache: {
       engine: {
-        doc: 'backend cache is written to',
+        doc: 'Session cache backend. This showcase holds no server-side session state, so it defaults to in-memory and needs no Redis in any environment. Set SESSION_CACHE_ENGINE=redis (with Redis provisioned) to switch back.',
         format: ['redis', 'memory'],
-        default: isProduction ? 'redis' : 'memory',
+        default: 'memory',
         env: 'SESSION_CACHE_ENGINE'
       },
       name: {
