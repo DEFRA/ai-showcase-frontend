@@ -1,0 +1,58 @@
+{% extends 'variants/daylight.njk' %}
+
+{% block main %}
+<main id="main-content" tabindex="-1">
+  <article class="day-article">
+    <nav aria-label="Breadcrumb" class="day-breadcrumb">
+      <a href="/daylight" class="day-breadcrumb__link">&larr; AI at Defra</a>
+    </nav>
+  </article>
+
+  <div class="day-pagehead">
+    <h1 class="day-pagehead__title">From the team</h1>
+    <p class="day-pagehead__lede">Working notes from the people building and assuring AI at Defra. We publish what we learn as we go, including the things that did not work.</p>
+  </div>
+
+  <div class="day-canvas">
+    {% set lead = posts[0] %}
+    <a href="/daylight/blog" class="day-featured">
+      <div class="day-featured__body">
+        <div class="day-featured__meta-top">
+          <span class="day-featured__date">{{ lead.date }}</span>
+          <span class="day-tag day-tag--{{ lead.tagTone }}">{{ lead.tag }}</span>
+          <span class="day-featured__date">{{ lead.readingTime }} read</span>
+        </div>
+        <h2 class="day-featured__title">{{ lead.title }}</h2>
+        <p class="day-featured__standfirst">{{ lead.excerpt }}</p>
+        <span class="day-featured__by">{{ lead.author }}</span>
+      </div>
+      <div class="day-featured__plate">
+        <canvas data-seed="{{ lead.title }}" data-plate="wave" aria-hidden="true" class="day-plate"></canvas>
+      </div>
+    </a>
+
+    <div class="day-bloglist">
+      {% set rowPlates = ['grid', 'flow', 'rings'] %}
+      {% for post in posts %}
+      {% if not loop.first %}
+      <a href="/daylight/blog" class="day-blogrow">
+        <div class="day-blogrow__body">
+          <div class="day-blogrow__meta-top">
+            <span class="day-blogrow__date">{{ post.date }}</span>
+            <span class="day-tag day-tag--{{ post.tagTone }}">{{ post.tag }}</span>
+            <span class="day-blogrow__date">{{ post.readingTime }} read</span>
+          </div>
+          <h2 class="day-blogrow__title">{{ post.title }}</h2>
+          <p class="day-blogrow__excerpt">{{ post.excerpt }}</p>
+          <span class="day-blogrow__foot">{{ post.author }}</span>
+        </div>
+        <div class="day-blogrow__plate">
+          <canvas data-seed="{{ post.title }}" data-plate="{{ rowPlates[loop.index0 % 3] }}" aria-hidden="true" class="day-plate"></canvas>
+        </div>
+      </a>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</main>
+{% endblock %}

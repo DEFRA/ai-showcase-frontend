@@ -23,7 +23,7 @@ describe('#errors', () => {
     })
 
     expect(result).toEqual(
-      expect.stringContaining('Page not found | ai-showcase-frontend')
+      expect.stringContaining('Page not found | AI at Defra')
     )
     expect(statusCode).toBe(statusCodes.notFound)
   })

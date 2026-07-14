@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ pageTitle }} | AI at Defra</title>
+  <meta name="robots" content="noindex">
+  <link href="{{ getAssetPath('src/client/stylesheets/showcase-fonts.scss') }}" rel="stylesheet">
+  <link href="{{ getAssetPath('src/client/stylesheets/parcels.scss') }}" rel="stylesheet">
+</head>
+<body class="par-body">
+  <a href="#main-content" class="par-skip-link">Skip to main content</a>
+  <div class="par-page">
+
+    <!-- The public footpath: one dotted line, drawn by your scroll, hero to footer.
+         Decorative; fully drawn with JS off. -->
+    <svg class="par-footpath" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <path class="par-footpath__line" d="M82,0 C80,5 30,7 24,12 C18,17 84,21 80,28 C76,35 22,37 18,44 C14,51 74,53 78,60 C82,67 28,71 24,78 C20,84 62,88 66,94 C68,97 58,99 54,100" pathLength="1"></path>
+    </svg>
+
+    <div class="par-content">
+      <div class="par-review">
+        <div class="par-review__inner">
+          <span class="par-review__label">Design review</span>
+          <a href="/" class="par-review__link">&larr; All variants</a>
+        </div>
+      </div>
+      <header class="par-header">
+        <div class="par-header__inner">
+          <a href="/parcels" class="par-brand" aria-label="AI at Defra, Department for Environment, Food and Rural Affairs">
+            <span class="par-brand__logo" aria-hidden="true"></span>
+            <span class="par-brand__name">AI at Defra</span>
+          </a>
+          <nav aria-label="Primary" class="par-nav">
+            <a href="/parcels" class="par-nav__link">Case studies</a>
+            <a href="/parcels/blog" class="par-nav__link">Blog</a>
+            <a href="/parcels/how-we-work" class="par-nav__link">How we work</a>
+            <a href="/parcels/strategy" class="par-nav__link">Strategy</a>
+            <a href="/parcels/careers" class="par-nav__link">Careers</a>
+          </nav>
+        </div>
+      </header>
+
+      {% block main %}{% endblock %}
+
+      <footer class="par-footer">
+        <div class="par-footer__inner">
+          <div class="par-footer__row">
+            <span class="par-footer__logo" role="img" aria-label="Department for Environment, Food and Rural Affairs"></span>
+            <nav aria-label="Legal" class="par-footer__legal">
+              <a href="#">Privacy</a>
+              <a href="#">Cookies</a>
+              <a href="#">Accessibility statement</a>
+              <a href="#">Contact</a>
+            </nav>
+          </div>
+          <p class="par-footer__licence">All content is available under the <a href="#">Open Government Licence v3.0</a>, except where otherwise stated. &copy; Crown copyright 2026. Built in the open. The source for this site is on GitHub.</p>
+        </div>
+      </footer>
+    </div>
+  </div>
+  <script type="module" src="{{ getAssetPath('src/client/javascripts/parcels.js') }}"></script>
+</body>
+</html>

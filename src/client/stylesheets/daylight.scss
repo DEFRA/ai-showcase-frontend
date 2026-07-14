@@ -1,0 +1,2078 @@
+// =========================================================================
+// VARIANT 3C — DAYLIGHT
+// Light "observatory" theme: mist white, green-black ink, one deep green.
+// Signature = generative growth-ring plates drawn on <canvas> per case study
+// (see daylight.js). Bespoke bundle: no GOV.UK CSS. All mockup inline styles
+// are reproduced here as classes (CSP forbids inline style/script). Fonts live
+// in shared showcase-fonts.scss.
+// =========================================================================
+
+$mist: #f2f7f4;
+$ink: #0a1614;
+$green: #17694a;
+$mint: #8fd6ac;
+$amber: #8a5a00; // dark amber, readable on the light theme (WCAG AA)
+$muted: #42504a;
+$prose: #22302a;
+$wash: #e7efe9;
+$band-body: #c3d4ca;
+$display: 'Bricolage Grotesque', sans-serif;
+$body: 'IBM Plex Sans', system-ui, sans-serif;
+$ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.day-body {
+  margin: 0;
+  background: $mist;
+  color: $ink;
+  font-family: $body;
+  -webkit-font-smoothing: antialiased;
+
+  ::selection {
+    background: $ink;
+    color: $mist;
+  }
+}
+
+// Base link colour at ELEMENT specificity only, so component links (.day-btn,
+// .day-nav__link, .day-door, ...) keep their own colours and hover states.
+// Nested under .day-body this outranked the buttons and turned them black on
+// hover (ink text on the ink hover background).
+a {
+  color: $green;
+  text-decoration-color: rgba(23, 105, 74, 0.45);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: $ink;
+  text-decoration-color: $ink;
+}
+
+.day-accent {
+  color: $green;
+}
+
+// Visible keyboard focus (WCAG 2.2 AA: 2.4.7, 2.4.13). Two-tone ring:
+// light inner reads on the ink bands, dark outer reads on mist.
+.day-body :focus-visible {
+  outline: 3px solid transparent;
+  outline-offset: 2px;
+  border-radius: 2px;
+  box-shadow: 0 0 0 2px $mist, 0 0 0 5px $ink;
+}
+
+// Entrance: visible by default; enhanced only when JS is on.
+@keyframes day-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.js-enabled .day-fade {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.6s $ease,
+    transform 0.6s $ease;
+}
+
+.js-enabled .day-fade.in-view {
+  opacity: 1;
+  transform: none;
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .js-enabled .day-fade {
+      opacity: 1;
+      transform: none;
+      animation: day-fade-up 0.6s $ease both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+  }
+}
+
+.day-page {
+  min-height: 100vh;
+  background: $mist;
+  overflow-x: clip;
+}
+
+// ---------------- Masthead (sticky) ----------------
+.day-header {
+  border-bottom: 1.5px solid $ink;
+  background: rgba(242, 247, 244, 0.94);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.day-header__inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 15px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.day-brand {
+  text-decoration: none;
+  color: $ink;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  &:hover,
+  &:focus-visible {
+    color: $green;
+  }
+}
+
+// Light theme: the green Defra logo reads directly on the mist, no plate needed
+// (Monument and Parcels put it on a white plate over their dark backgrounds).
+.day-brand__logo {
+  flex: none;
+  width: 92px;
+  height: 48px;
+  background: url("images/defra-logo.svg") no-repeat left center / contain;
+}
+
+.day-brand__divider {
+  width: 1.5px;
+  height: 26px;
+  background: rgba(10, 22, 20, 0.3);
+  display: inline-block;
+}
+
+.day-brand__name {
+  font-family: $display;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+
+.day-nav {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+  font-size: 14.5px;
+  font-weight: 500;
+}
+
+.day-nav__link {
+  color: $ink;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    color: $green;
+  }
+}
+
+// ---------------- Hero + hero plate ----------------
+.day-hero {
+  border-bottom: 1.5px solid $ink;
+}
+
+.day-hero__inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 26px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+  gap: 48px;
+  align-items: center;
+}
+
+.day-hero__copy {
+  padding: 92px 0;
+}
+
+.day-hero__title {
+  font-family: $display;
+  font-weight: 700;
+  font-size: clamp(42px, 6.4vw, 94px);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  margin: 0;
+  max-width: 13ch;
+}
+
+.day-hero__lede {
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.6;
+  color: $muted;
+  max-width: 48ch;
+  margin: 28px 0 0;
+}
+
+.day-hero__actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 36px;
+  flex-wrap: wrap;
+}
+
+.day-btn {
+  display: inline-block;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: 2px;
+}
+
+.day-btn--solid {
+  background: $ink;
+  color: $mist;
+  padding: 14px 26px;
+
+  &:hover,
+  &:focus-visible {
+    background: $green;
+    color: $mist;
+  }
+}
+
+.day-btn--outline {
+  border: 1.5px solid $ink;
+  color: $ink;
+  padding: 12.5px 26px;
+
+  &:hover,
+  &:focus-visible {
+    background: $ink;
+    color: $mist;
+  }
+}
+
+.day-hero__plate {
+  padding: 48px 0;
+  justify-self: center;
+  width: 100%;
+  max-width: 440px;
+}
+
+// Ring plate canvases (decorative, drawn by daylight.js).
+.day-plate {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+// No-JS fallback: a single subtle ring so the empty canvas doesn't look broken.
+html:not(.js-enabled) .day-plate {
+  border: 1.5px solid rgba(23, 105, 74, 0.35);
+  border-radius: 50%;
+}
+
+// ---------------- Case studies (editorial rows) ----------------
+.day-cases {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 76px 26px 30px;
+}
+
+// Home-only lead section: extra air between the hero hairline and the openings.
+.day-cases--lead {
+  padding-top: clamp(88px, 8vw, 104px);
+}
+
+.day-cases__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.day-cases__title {
+  font-family: $display;
+  font-weight: 700;
+  font-size: clamp(28px, 3.2vw, 42px);
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.day-cases__note {
+  font-size: 13.5px;
+  color: $muted;
+  margin: 0;
+  max-width: 44ch;
+}
+
+.day-case {
+  display: grid;
+  gap: clamp(24px, 4vw, 64px);
+  align-items: center;
+  padding: 34px 12px;
+  border-top: 1.5px solid $ink;
+  text-decoration: none;
+  color: $ink;
+  transition: background 0.18s ease-out;
+
+  &:hover,
+  &:focus-visible {
+    background: $wash;
+    box-shadow: inset 3px 0 0 $green;
+  }
+}
+
+.day-case--even {
+  grid-template-columns: minmax(0, 1.5fr) minmax(150px, 0.5fr);
+
+  .day-case__text {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .day-case__plate {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+.day-case--odd {
+  grid-template-columns: minmax(150px, 0.5fr) minmax(0, 1.5fr);
+
+  .day-case__text {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .day-case__plate {
+    grid-column: 1;
+    grid-row: 1;
+  }
+}
+
+.day-case__meta {
+  display: flex;
+  gap: 18px;
+  align-items: baseline;
+  font-size: 13.5px;
+  margin-bottom: 12px;
+}
+
+.day-case__status {
+  color: $green;
+  font-weight: 600;
+}
+
+.day-case__area {
+  color: $muted;
+}
+
+.day-case__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(26px, 3.4vw, 46px);
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  margin: 0 0 14px;
+  max-width: 18ch;
+}
+
+.day-case__summary {
+  font-size: 15px;
+  line-height: 1.6;
+  color: $muted;
+  margin: 0;
+  max-width: 52ch;
+}
+
+.day-case__cta {
+  display: inline-block;
+  margin-top: 16px;
+  font-weight: 600;
+  font-size: 14.5px;
+  color: $green;
+}
+
+.day-case__plate {
+  justify-self: center;
+  width: clamp(150px, 18vw, 230px);
+}
+
+.day-rule {
+  height: 1.5px;
+  background: $ink;
+}
+
+// ---------------- One voice ----------------
+.day-voice {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 84px 26px;
+}
+
+.day-voice__fig {
+  margin: 0;
+}
+
+.day-voice__text {
+  margin: 0;
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(26px, 3.8vw, 50px);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  max-width: 26ch;
+}
+
+.day-voice__cite {
+  margin-top: 22px;
+  font-size: 15px;
+  color: $muted;
+}
+
+// ---------------- How we work (ink band) ----------------
+.day-how {
+  background: $ink;
+  color: $mist;
+}
+
+.day-how__inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 76px 26px;
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(0, 2fr);
+  gap: 48px;
+}
+
+.day-how__title {
+  font-family: $display;
+  font-weight: 700;
+  font-size: clamp(26px, 3vw, 40px);
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.day-how__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 36px 44px;
+}
+
+.day-principle__title {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+  color: $mint;
+}
+
+.day-principle__body {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: $band-body;
+  margin: 0;
+}
+
+.day-transparency {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+  flex-wrap: wrap;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 26px 40px;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.day-transparency__text {
+  color: $mist;
+  font-weight: 600;
+  font-size: clamp(15px, 1.6vw, 18px);
+  border-top: 1px solid rgba(242, 247, 244, 0.3);
+  padding-top: 22px;
+  flex: 1;
+}
+
+.day-transparency__cta {
+  color: $mint;
+  font-weight: 600;
+  font-size: 15px;
+  white-space: nowrap;
+  padding-top: 22px;
+}
+
+// ---------------- Blog ----------------
+.day-blog {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 76px 26px 8px;
+}
+
+.day-blog__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.day-blog__title {
+  font-family: $display;
+  font-weight: 700;
+  font-size: clamp(26px, 3vw, 40px);
+  letter-spacing: -0.025em;
+  margin: 0 0 8px;
+}
+
+.day-blog__all {
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+.day-post {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: baseline;
+  padding: 20px 12px;
+  border-top: 1.5px solid $ink;
+  text-decoration: none;
+  color: $ink;
+  transition: background 0.18s ease-out;
+
+  &:hover,
+  &:focus-visible {
+    background: $wash;
+    box-shadow: inset 3px 0 0 $green;
+  }
+}
+
+.day-post__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(19px, 2.2vw, 27px);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.day-post__date {
+  font-size: 13.5px;
+  color: $muted;
+}
+
+// ---------------- Strategy + careers doors ----------------
+.day-doors {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 56px 26px 104px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.day-door {
+  text-decoration: none;
+  color: $ink;
+  border: 1.5px solid $ink;
+  border-radius: 2px;
+  padding: 34px 30px;
+  transition: background 0.18s ease-out;
+
+  // Both doors share one calm hover, matching .day-case / .day-blogrow: a light
+  // wash + a green inset keyline. The text stays ink and fully readable (no
+  // full-colour invert that reads as blocking the text out).
+  &:hover,
+  &:focus-visible {
+    background: $wash;
+    box-shadow: inset 4px 0 0 $green;
+  }
+}
+
+.day-door__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(22px, 2.4vw, 30px);
+  margin: 0 0 10px;
+  letter-spacing: -0.02em;
+}
+
+.day-door__body {
+  font-size: 14.5px;
+  line-height: 1.6;
+  margin: 0;
+  opacity: 0.75;
+}
+
+// ---------------- Footer ----------------
+.day-footer {
+  border-top: 1.5px solid $ink;
+}
+
+.day-footer__inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 44px 26px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.day-footer__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+
+.day-footer__logo {
+  display: block;
+  width: 120px;
+  height: 55px;
+  background: url("images/defra-logo.svg") no-repeat left center / contain;
+}
+
+.day-footer__legal {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  font-size: 13px;
+
+  a {
+    color: $ink;
+
+    &:hover,
+    &:focus-visible {
+      color: $green;
+      text-decoration: underline;
+      text-decoration-color: $green;
+      text-underline-offset: 3px;
+    }
+  }
+}
+
+.day-footer__licence {
+  font-size: 12.5px;
+  color: $muted;
+  margin: 0;
+  max-width: 80ch;
+  line-height: 1.6;
+
+  a {
+    color: $ink;
+
+    &:hover,
+    &:focus-visible {
+      color: $green;
+      text-decoration: underline;
+      text-decoration-color: $green;
+      text-underline-offset: 3px;
+    }
+  }
+}
+
+// ---------------- Case study ----------------
+.day-article {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 26px;
+}
+
+.day-breadcrumb {
+  padding: 24px 0 0;
+}
+
+.day-breadcrumb__link {
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.day-case-header {
+  padding: 44px 0 52px;
+  border-bottom: 1.5px solid $ink;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(200px, 0.6fr);
+  gap: 48px;
+  align-items: center;
+}
+
+.day-case-header__plate {
+  justify-self: center;
+  width: clamp(170px, 20vw, 260px);
+}
+
+.day-case-meta {
+  display: flex;
+  gap: 10px 28px;
+  flex-wrap: wrap;
+  font-size: 13.5px;
+  color: $muted;
+  margin-bottom: 22px;
+}
+
+.day-case-meta__live {
+  color: $green;
+  font-weight: 600;
+}
+
+.day-case-title {
+  font-family: $display;
+  font-weight: 700;
+  font-size: clamp(36px, 5.6vw, 78px);
+  line-height: 0.99;
+  letter-spacing: -0.03em;
+  margin: 0;
+  max-width: 15ch;
+}
+
+.day-case-standfirst {
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.6;
+  color: $muted;
+  max-width: 56ch;
+  margin: 24px 0 0;
+}
+
+.day-outcomes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 40px;
+  padding: 48px 0 0;
+}
+
+.day-outcome__figure {
+  font-family: $display;
+  font-weight: 700;
+  font-size: clamp(40px, 4.4vw, 60px);
+  letter-spacing: -0.03em;
+  color: $green;
+}
+
+.day-outcome__label {
+  font-size: 14px;
+  line-height: 1.55;
+  color: $muted;
+  margin: 8px 0 0;
+  max-width: 30ch;
+}
+
+.day-outcomes-note {
+  font-size: 13px;
+  color: $muted;
+  margin: 14px 0 0;
+}
+
+.day-case-body {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(220px, 1fr);
+  gap: 64px;
+  padding: 52px 0 0;
+}
+
+.day-prose {
+  font-size: 17px;
+  line-height: 1.75;
+  color: $prose;
+  max-width: 66ch;
+
+  h2 {
+    font-family: $display;
+    font-weight: 600;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+    margin: 34px 0 14px;
+    color: $ink;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  p {
+    margin: 0 0 22px;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.day-case-quote {
+  margin: 42px 0;
+  padding: 0 0 0 28px;
+  border-left: 3px solid $green;
+}
+
+.day-case-quote__text {
+  margin: 0;
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(22px, 2.4vw, 30px);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.day-case-quote__cite {
+  margin-top: 16px;
+  font-size: 14px;
+  color: $muted;
+}
+
+.day-facts {
+  font-size: 14px;
+  color: $muted;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  border-left: 1.5px solid $ink;
+  padding-left: 28px;
+  align-self: start;
+}
+
+.day-fact {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.day-fact__term {
+  color: $ink;
+  font-weight: 600;
+  font-size: 13.5px;
+}
+
+.day-fact__body {
+  line-height: 1.55;
+}
+
+.day-record {
+  margin: 72px 0 104px;
+  background: $ink;
+  color: $mist;
+  border-radius: 2px;
+  padding: clamp(26px, 3vw, 44px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.day-record__text {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(20px, 2.4vw, 30px);
+  margin: 0;
+  max-width: 28ch;
+  letter-spacing: -0.02em;
+}
+
+.day-record__cta {
+  flex: none;
+  background: $mist;
+  color: $ink;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 14px 26px;
+  border-radius: 2px;
+
+  &:hover,
+  &:focus-visible {
+    background: $mint;
+    color: $ink;
+  }
+}
+
+// ---------------- Content pages (register, blog, strategy, careers) ---------
+// Daylight keeps its light editorial idiom: hairline ink rules and generous
+// rows, distinct from Monument's table and Parcels' bordered cells.
+.day-pagehead {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 52px 26px 0;
+}
+
+.day-pagehead__title {
+  font-family: $display;
+  font-weight: 700;
+  font-size: clamp(34px, 5vw, 68px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin: 0;
+  max-width: 16ch;
+}
+
+.day-pagehead__lede {
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.6;
+  color: $muted;
+  max-width: 56ch;
+  margin: 24px 0 0;
+}
+
+.day-section {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 44px 26px 104px;
+}
+
+.day-reg {
+  border-top: 1.5px solid $ink;
+}
+
+.day-reg__row {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: baseline;
+  padding: 22px 12px;
+  border-bottom: 1px solid rgba(10, 22, 20, 0.15);
+}
+@media (max-width: 40rem) {
+  .day-reg__row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}
+
+.day-reg__tool {
+  font-family: $display;
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+  margin: 0 0 4px;
+}
+
+.day-reg__ref {
+  font-size: 13px;
+  color: $muted;
+}
+
+.day-reg__area {
+  font-size: 14px;
+  color: $muted;
+}
+
+.day-reg__status {
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+
+  &--green {
+    color: $green;
+  }
+
+  &--amber {
+    color: $amber;
+  }
+
+  &--dim {
+    color: $muted;
+  }
+}
+
+.day-postlist {
+  border-top: 1.5px solid $ink;
+}
+
+.day-postrow {
+  max-width: 70ch;
+  padding: 28px 12px;
+  border-bottom: 1px solid rgba(10, 22, 20, 0.15);
+}
+
+.day-postrow__date {
+  font-size: 13px;
+  color: $muted;
+}
+
+.day-postrow__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(21px, 2.4vw, 30px);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 8px 0 12px;
+}
+
+.day-postrow__excerpt {
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: $muted;
+  margin: 0 0 12px;
+}
+
+.day-postrow__author {
+  font-size: 13px;
+  color: $muted;
+}
+
+.day-roles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.day-role {
+  border: 1.5px solid $ink;
+  border-radius: 2px;
+  padding: 24px;
+}
+
+.day-role__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: -0.01em;
+  margin: 0 0 6px;
+}
+
+.day-role__meta {
+  font-size: 14px;
+  color: $muted;
+  margin: 0;
+}
+
+.day-section__sub {
+  font-family: $display;
+  font-weight: 700;
+  font-size: clamp(22px, 2.6vw, 32px);
+  letter-spacing: -0.02em;
+  margin: 48px 0 20px;
+}
+
+// ---------------- Reduced motion ----------------
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    // stylelint-disable-next-line declaration-no-important
+    animation-duration: 0.01ms !important;
+    // stylelint-disable-next-line declaration-no-important
+    animation-delay: 0ms !important;
+    // stylelint-disable-next-line declaration-no-important
+    transition-duration: 0.01ms !important;
+  }
+
+  .js-enabled .day-fade {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// ---------------- Design-review bar (prototype chrome) ----------------
+.day-review {
+  background: $ink;
+}
+
+.day-review__inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 8px 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.day-review__label {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(242, 247, 244, 0.6);
+}
+
+.day-review__link {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: $mist;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    color: $mint;
+  }
+}
+
+// ---------------- Skip link (accessibility) ----------------
+.day-body .day-skip-link {
+  position: absolute;
+  top: 0;
+  left: -999px;
+  z-index: 100;
+  padding: 10px 15px;
+  background: $ink;
+  color: $mist;
+  font-family: $body;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    color: $mist;
+    background: $ink;
+  }
+
+  &:focus {
+    left: 0;
+  }
+}
+
+// =========================================================================
+// Inner-page artifacts (strategy ledger + gantt + measures, decision flow,
+// careers roster + hiring rail + priorities, blog featured, case lessons).
+// Editorial line-art in the Daylight idiom: hairline ink rules, one deep
+// green, mint accents. All line-art is inline SVG using geometry attributes
+// only; text inside SVG is styled here by class (never inline).
+// =========================================================================
+
+// Visually-hidden accessible equivalents for aria-hidden SVG artifacts.
+.day-vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Shared body container for the rebuilt inner pages.
+.day-canvas {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 44px 26px 104px;
+}
+
+.day-blockgap {
+  margin-top: clamp(48px, 6vw, 84px);
+}
+
+.day-block-head {
+  font-family: $display;
+  font-weight: 700;
+  font-size: clamp(22px, 2.6vw, 32px);
+  letter-spacing: -0.02em;
+  margin: 0 0 24px;
+}
+
+// ---------------- Strategy: intro + decorative plate ----------------
+.day-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(170px, 0.7fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: center;
+}
+
+.day-intro__text {
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(18px, 1.9vw, 23px);
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+  color: $prose;
+  max-width: 32ch;
+
+  p {
+    margin: 0;
+  }
+}
+
+.day-intro__plate {
+  justify-self: center;
+  width: clamp(150px, 18vw, 240px);
+}
+
+// ---------------- Strategy: will / won't ledger ----------------
+.day-ledger {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(28px, 5vw, 64px);
+}
+
+.day-ledger__col--wont {
+  border-left: 1.5px solid $ink;
+  padding-left: clamp(28px, 5vw, 64px);
+}
+
+.day-ledger__head {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $muted;
+  margin: 0 0 22px;
+}
+
+.day-ledger__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.day-ledger__item {
+  padding-left: 18px;
+  border-left: 3px solid $ink;
+}
+
+.day-ledger__item--will {
+  border-left-color: $green;
+}
+
+.day-ledger__line {
+  display: block;
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(19px, 2.2vw, 26px);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: $ink;
+}
+
+.day-ledger__gain {
+  display: block;
+  margin-top: 8px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: $muted;
+}
+
+// ---------------- Strategy: three-year roadmap ----------------
+// Bespoke editorial year-grid (replaces the generic gantt). Committed tracks are
+// solid green bars; the planned track is a hairline-outlined "in discovery" bar.
+// Year columns are separated by faint gridlines. The visually-hidden .day-vh
+// list carries the same information for screen readers (roadmap is aria-hidden).
+.day-roadmap-scroll {
+  overflow-x: auto;
+}
+
+.day-roadmap {
+  --label: clamp(150px, 24vw, 260px);
+  min-width: 460px;
+  border-top: 1.5px solid $ink;
+  margin-top: 8px;
+}
+
+.day-roadmap__row {
+  display: grid;
+  grid-template-columns: var(--label) minmax(0, 1fr);
+  align-items: center;
+  border-bottom: 1px solid rgba(10, 22, 20, 0.14);
+}
+
+.day-roadmap__row--head {
+  border-bottom: 1.5px solid $ink;
+}
+
+.day-roadmap__label {
+  padding: 18px 20px 18px 0;
+}
+
+.day-roadmap__name {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: $ink;
+}
+
+.day-roadmap__lane {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  min-height: 58px;
+  background-image:
+    linear-gradient(rgba(10, 22, 20, 0.1), rgba(10, 22, 20, 0.1)),
+    linear-gradient(rgba(10, 22, 20, 0.1), rgba(10, 22, 20, 0.1));
+  background-size:
+    1.5px 100%,
+    1.5px 100%;
+  background-position:
+    33.333% 0,
+    66.666% 0;
+  background-repeat: no-repeat;
+}
+
+.day-roadmap__lane--head {
+  min-height: 0;
+  padding: 8px 0 12px;
+  background: none;
+}
+
+.day-roadmap__year {
+  font-family: $display;
+  font-weight: 700;
+  font-size: clamp(20px, 2.6vw, 30px);
+  letter-spacing: -0.02em;
+  color: $ink;
+  padding-left: 14px;
+}
+
+.day-roadmap__bar {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  margin: 8px 0;
+  padding: 0 16px;
+  border-radius: 3px;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.day-roadmap__bar--committed {
+  background: $green;
+  color: $mist;
+}
+
+.day-roadmap__bar--planned {
+  background: $mist;
+  border: 1.5px solid $green;
+  color: $green;
+}
+
+.day-roadmap__bar--y20262028 {
+  grid-column: 1 / 4;
+}
+
+.day-roadmap__bar--y20262027 {
+  grid-column: 1 / 3;
+}
+
+.day-roadmap__bar--y20272028 {
+  grid-column: 2 / 4;
+}
+
+.day-roadmap__note {
+  display: flex;
+  align-items: center;
+  gap: 12px 24px;
+  flex-wrap: wrap;
+  margin: 22px 0 0;
+  font-size: 13.5px;
+  color: $muted;
+}
+
+.day-roadmap__keyitem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.day-roadmap__key {
+  display: inline-block;
+  width: 28px;
+  height: 14px;
+  border-radius: 2px;
+}
+
+.day-roadmap__key--solid {
+  background: $green;
+}
+
+.day-roadmap__key--planned {
+  background: $mist;
+  border: 1.5px solid $green;
+}
+
+.day-roadmap__milestone {
+  font-weight: 600;
+  color: $ink;
+}
+
+// ---------------- Strategy: measurement strip ----------------
+.day-measure {
+  list-style: none;
+  margin: 0;
+  padding: 34px 0 0;
+  border-top: 1.5px solid $ink;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(24px, 4vw, 48px);
+}
+
+.day-measure__node {
+  position: relative;
+}
+
+.day-measure__dot {
+  position: absolute;
+  top: -41px;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: $mist;
+  border: 2.5px solid $green;
+}
+
+.day-measure__term {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(18px, 2vw, 23px);
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+  color: $ink;
+}
+
+.day-measure__body {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: $muted;
+  margin: 0;
+}
+
+// ---------------- How we work: principles editorial ----------------
+.day-principles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(28px, 4vw, 44px);
+}
+
+.day-principle-card {
+  border-top: 1.5px solid $ink;
+  padding-top: 22px;
+  display: flex;
+  flex-direction: column;
+}
+
+.day-principle-card__plate {
+  width: 72px;
+  margin-bottom: 18px;
+}
+
+.day-principle-card__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(19px, 2vw, 24px);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0 0 12px;
+  color: $green;
+}
+
+.day-principle-card__body {
+  font-size: 15px;
+  line-height: 1.65;
+  color: $prose;
+  margin: 0;
+}
+
+// ---------------- How we work: decision flow ----------------
+.day-flow {
+  overflow-x: auto;
+}
+
+.day-flow__svg {
+  display: block;
+  width: 100%;
+  min-width: 720px;
+  height: auto;
+}
+
+.day-flow__spine {
+  fill: $ink;
+}
+
+.day-flow__branch {
+  fill: $muted;
+}
+
+.day-flow__node {
+  fill: $ink;
+}
+
+.day-flow__node--scale {
+  fill: $green;
+}
+
+.day-flow__node--retire {
+  fill: $muted;
+}
+
+.day-flow__open {
+  fill: $mist;
+  stroke: $muted;
+  stroke-width: 2;
+}
+
+.day-flow__diamond {
+  fill: $mist;
+  stroke: $ink;
+  stroke-width: 2;
+}
+
+.day-flow__name {
+  font-family: $display;
+  font-weight: 600;
+  font-size: 15px;
+  fill: $ink;
+  text-anchor: middle;
+}
+
+.day-flow__q {
+  font-family: $display;
+  font-weight: 600;
+  font-size: 15px;
+  fill: $ink;
+  text-anchor: middle;
+}
+
+.day-flow__yes {
+  font-family: $body;
+  font-weight: 600;
+  font-size: 12px;
+  fill: $green;
+  text-anchor: middle;
+}
+
+.day-flow__no {
+  font-family: $body;
+  font-weight: 600;
+  font-size: 12px;
+  fill: $muted;
+  text-anchor: start;
+}
+
+.day-flow__sub {
+  font-family: $body;
+  font-weight: 500;
+  font-size: 12px;
+  fill: $muted;
+  text-anchor: middle;
+}
+
+// ---------------- How we work: action strip ----------------
+.day-actionstrip {
+  margin-top: clamp(40px, 6vw, 72px);
+  border-top: 1.5px solid $ink;
+  padding-top: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.day-actionstrip__text {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(19px, 2.2vw, 26px);
+  letter-spacing: -0.02em;
+  color: $ink;
+  margin: 0;
+  max-width: 34ch;
+}
+
+.day-actionstrip__note {
+  font-size: 14px;
+  color: $muted;
+  margin: 10px 0 0;
+}
+
+.day-btn--mint {
+  background: $mint;
+  color: $ink;
+  padding: 14px 26px;
+
+  &:hover,
+  &:focus-visible {
+    background: $green;
+    color: $mist;
+  }
+}
+
+// ---------------- Careers: roster ----------------
+.day-roster__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(20px, 4vw, 48px);
+  align-items: center;
+  padding: 30px 12px;
+  border-top: 1.5px solid $ink;
+}
+
+.day-roster__tag {
+  display: inline-block;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+
+  &--green {
+    color: $green;
+  }
+
+  &--amber {
+    color: $amber;
+  }
+}
+
+.day-roster__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(24px, 3vw, 38px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  margin: 0 0 12px;
+  color: $ink;
+}
+
+.day-roster__meta {
+  font-size: 14px;
+  color: $muted;
+  margin: 0 0 8px;
+}
+
+.day-roster__owns {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: $prose;
+  margin: 0;
+  max-width: 52ch;
+}
+
+.day-roster__aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  text-align: right;
+}
+
+.day-roster__salary {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(16px, 1.8vw, 20px);
+  letter-spacing: -0.01em;
+  color: $ink;
+  white-space: nowrap;
+}
+
+.day-roster__closing {
+  font-size: 13.5px;
+  color: $muted;
+}
+
+// ---------------- Careers: hiring rail ----------------
+.day-rail {
+  position: relative;
+  margin-top: 8px;
+  padding-top: 4px;
+}
+
+.day-rail__spine {
+  position: absolute;
+  top: 11px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+
+  rect {
+    fill: $ink;
+  }
+}
+
+.day-rail__stages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  position: relative;
+}
+
+.day-rail__stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.day-rail__dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: $green;
+  border: 2px solid $mist;
+}
+
+.day-rail__name {
+  font-family: $display;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  color: $ink;
+}
+
+.day-rail__detail {
+  font-size: 13px;
+  line-height: 1.5;
+  color: $muted;
+  max-width: 22ch;
+}
+
+.day-rail__days {
+  font-size: 12px;
+  font-weight: 600;
+  color: $green;
+}
+
+// ---------------- Careers: what we look for ----------------
+.day-look {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: start;
+  gap: clamp(24px, 4vw, 44px);
+  border-top: 1.5px solid $ink;
+  padding-top: 28px;
+}
+
+.day-priority {
+  padding-left: 18px;
+  border-left: 3px solid $green;
+}
+
+.day-priority__name {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(18px, 2vw, 23px);
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+  color: $ink;
+}
+
+.day-priority__body {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: $muted;
+  margin: 0;
+}
+
+// ---------------- Blog: featured + rows ----------------
+.day-tag {
+  display: inline-block;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+
+  &--green {
+    color: $green;
+  }
+
+  &--amber {
+    color: $amber;
+  }
+
+  &--dim {
+    color: $muted;
+  }
+}
+
+.day-featured {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(120px, 15vw, 168px);
+  gap: clamp(24px, 4vw, 48px);
+  align-items: center;
+  border-top: 1.5px solid $ink;
+  padding: clamp(28px, 4vw, 44px) 12px;
+  text-decoration: none;
+  color: $ink;
+  transition: background 0.18s ease-out;
+
+  &:hover,
+  &:focus-visible {
+    background: $wash;
+    box-shadow: inset 3px 0 0 $green;
+  }
+}
+
+.day-featured__body {
+  min-width: 0;
+}
+
+.day-featured__plate {
+  width: 100%;
+}
+
+.day-featured__meta-top {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.day-featured__date {
+  font-size: 13px;
+  color: $muted;
+}
+
+.day-featured__title {
+  font-family: $display;
+  font-weight: 700;
+  font-size: clamp(28px, 3.6vw, 48px);
+  line-height: 1.03;
+  letter-spacing: -0.03em;
+  margin: 0 0 16px;
+}
+
+.day-featured__standfirst {
+  font-size: clamp(16px, 1.6vw, 18px);
+  line-height: 1.6;
+  color: $muted;
+  margin: 0 0 16px;
+  max-width: 52ch;
+}
+
+.day-featured__by {
+  display: block;
+  font-size: 13.5px;
+  color: $muted;
+}
+
+.day-bloglist {
+  margin-top: clamp(36px, 5vw, 64px);
+}
+
+.day-blogrow {
+  display: grid;
+  // Plate sits at the row's right edge (right-aligned); text takes a readable
+  // width on the left.
+  grid-template-columns: minmax(0, 1fr) 64px;
+  gap: clamp(24px, 3vw, 40px);
+  align-items: center;
+  padding: 26px 12px;
+  border-top: 1.5px solid $ink;
+  text-decoration: none;
+  color: $ink;
+  transition: background 0.18s ease-out;
+
+  &:hover,
+  &:focus-visible {
+    background: $wash;
+    box-shadow: inset 3px 0 0 $green;
+  }
+}
+
+.day-blogrow__body {
+  min-width: 0;
+}
+
+.day-blogrow__plate {
+  width: 100%;
+}
+
+.day-blogrow__meta-top {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.day-blogrow__date {
+  font-size: 13px;
+  color: $muted;
+}
+
+.day-blogrow__title {
+  font-family: $display;
+  font-weight: 600;
+  font-size: clamp(20px, 2.4vw, 30px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0 0 10px;
+}
+
+.day-blogrow__excerpt {
+  font-size: 15px;
+  line-height: 1.6;
+  color: $muted;
+  margin: 0 0 10px;
+  max-width: 62ch;
+}
+
+.day-blogrow__foot {
+  display: block;
+  font-size: 13px;
+  color: $muted;
+}
+
+// ---------------- Case study: lessons ----------------
+.day-lessons {
+  margin: 8px 0 0;
+  border-top: 1.5px solid $ink;
+}
+
+.day-lesson {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(18px, 3vw, 32px);
+  align-items: baseline;
+  padding: 22px 0;
+  border-bottom: 1px solid rgba(10, 22, 20, 0.15);
+}
+
+.day-lesson__num {
+  font-family: $display;
+  font-weight: 700;
+  font-size: clamp(30px, 4vw, 52px);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: $green;
+}
+
+.day-lesson__text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: $prose;
+}
+
+// ---------------- Inner-artifact responsive: stack under ~560px ----------
+@media (max-width: 35rem) {
+  .day-intro {
+    grid-template-columns: 1fr;
+  }
+
+  .day-intro__plate {
+    justify-self: start;
+    width: 160px;
+  }
+
+  .day-ledger {
+    grid-template-columns: 1fr;
+  }
+
+  .day-ledger__col--wont {
+    border-left: 0;
+    border-top: 1.5px solid $ink;
+    padding-left: 0;
+    padding-top: 28px;
+  }
+
+  .day-principles {
+    grid-template-columns: 1fr;
+  }
+
+  .day-measure {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .day-measure__node {
+    padding-left: 22px;
+  }
+
+  .day-measure__dot {
+    top: 4px;
+  }
+
+  .day-roster__row {
+    grid-template-columns: 1fr;
+  }
+
+  .day-roster__aside {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    text-align: left;
+  }
+
+  .day-rail__spine {
+    display: none;
+  }
+
+  .day-rail__stages {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .day-rail__stage {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .day-look {
+    grid-template-columns: 1fr;
+  }
+
+  .day-featured {
+    grid-template-columns: 1fr;
+  }
+
+  .day-featured__plate {
+    display: none;
+  }
+
+  .day-blogrow {
+    grid-template-columns: 1fr;
+  }
+
+  .day-blogrow__plate {
+    display: none;
+  }
+
+  .day-actionstrip {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .day-case-header {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .day-case-header__plate {
+    justify-self: start;
+    width: 150px;
+  }
+
+  .day-case-body {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .day-facts {
+    border-left: 0;
+    border-top: 1.5px solid $ink;
+    padding-left: 0;
+    padding-top: 24px;
+  }
+}

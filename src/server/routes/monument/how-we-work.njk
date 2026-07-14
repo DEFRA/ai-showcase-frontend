@@ -1,0 +1,63 @@
+{% extends 'variants/monument.njk' %}
+
+{% block main %}
+<main id="main-content" tabindex="-1">
+  <article class="mon-article">
+    <nav aria-label="Breadcrumb" class="mon-breadcrumb">
+      <a href="/monument" class="mon-breadcrumb__link">&larr; AI at Defra</a>
+    </nav>
+
+    <header class="mon-case-header">
+      <h1 class="mon-case-title">How we work</h1>
+      <p class="mon-case-standfirst">Three rules decide what we build and what we stop. They are how we hold each other to account, and how we decide when to say no.</p>
+    </header>
+
+    <div class="mon-content">
+      <section aria-label="Our three rules">
+        <div class="mon-poster">
+          {% set rulePlates = ['parcels', 'canopy', 'drill'] %}
+          {% for p in principles %}
+          <article class="mon-poster__card">
+            <div class="mon-poster__scene">
+              <canvas data-seed="{{ p.title }}" data-plate="{{ rulePlates[loop.index0 % 3] }}" aria-hidden="true" class="mon-plate"></canvas>
+            </div>
+            <h2 class="mon-poster__title">{{ p.title }}</h2>
+            <p class="mon-poster__body">{{ p.body }}</p>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="mon-section" aria-labelledby="how-journey">
+        <h2 class="mon-block-title" id="how-journey">The journey a request takes</h2>
+        <p class="mon-block-intro">Every idea runs the same six gates, from first triage to honest retirement. Most never need a model at all.</p>
+        <ol class="mon-gateway">
+          {% for g in lifecycle %}
+          <li class="mon-gateway__gate{% if g.gate == 'Live' %} is-live{% endif %}">
+            <span class="mon-gateway__node">
+              <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true" focusable="false">
+                <circle class="mon-eng-ring" cx="12" cy="12" r="9"></circle>
+                <circle class="mon-eng-core" cx="12" cy="12" r="3.2"></circle>
+              </svg>
+            </span>
+            <div class="mon-gateway__body">
+              <p class="mon-gateway__name">{{ g.gate }}</p>
+              <p class="mon-gateway__decision">{{ g.decision }}</p>
+              <p class="mon-gateway__outcome">{{ g.outcome }}</p>
+              {% if g.gate == 'Live' %}<p class="mon-gateway__exit mon-gateway__exit--live">Where AI goes live</p>{% endif %}
+              {% if g.branch == 'stop' %}<p class="mon-gateway__exit mon-gateway__exit--stop">Where most teams exit</p>{% endif %}
+              {% if g.branch == 'off' %}<p class="mon-gateway__exit mon-gateway__exit--off">Where AI leaves the process</p>{% endif %}
+            </div>
+          </li>
+          {% endfor %}
+        </ol>
+      </section>
+
+      <footer class="mon-signoff">
+        <p class="mon-signoff__line">The best tool we can offer is often the decision not to build one.</p>
+        <p class="mon-signoff__note">Every request runs the same three rules, whether the AI is a single sensor in one field or a forecast for the whole country. When a simpler option does the job, that is what we recommend. When AI cannot be held to account, we do not use it.</p>
+      </footer>
+    </div>
+  </article>
+</main>
+{% endblock %}

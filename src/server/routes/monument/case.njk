@@ -1,0 +1,87 @@
+{% extends 'variants/monument.njk' %}
+
+{% block main %}
+<main id="main-content" tabindex="-1">
+  <article class="mon-article">
+    <nav aria-label="Breadcrumb" class="mon-breadcrumb">
+      <a href="/monument" class="mon-breadcrumb__link">&larr; AI at Defra</a>
+    </nav>
+
+    <header class="mon-case-header">
+      <div class="mon-case-plate">
+        <div class="mon-case-plate__body">
+          <div class="mon-case-meta">
+            <span class="mon-case-meta__live">Live pilot</span>
+            <span>Three farms in Lincolnshire and Shropshire</span>
+            <span>Running since spring 2026</span>
+          </div>
+          <h1 class="mon-case-title">Tractors that work the field on their own</h1>
+          <p class="mon-case-standfirst">Driverless tractors are drilling and hoeing on three trial farms while a single operator supervises the fleet from a cabin at the edge of the field. The machine plans the pass and watches the ground. The person stays accountable for it.</p>
+        </div>
+        <div class="mon-case-plate__scene">
+          <canvas data-seed="Tractors that work the field on their own" data-plate="furrows" aria-hidden="true" class="mon-plate"></canvas>
+        </div>
+      </div>
+    </header>
+
+    <section aria-label="Results" class="mon-outcomes">
+      <div>
+        <div class="mon-outcome__figure">3</div>
+        <p class="mon-outcome__label">Machines supervised by one operator in the trial</p>
+      </div>
+      <div>
+        <div class="mon-outcome__figure">24 hr</div>
+        <p class="mon-outcome__label">Drilling window in the autumn, worked around the weather not the shift</p>
+      </div>
+      <div>
+        <div class="mon-outcome__figure">40%</div>
+        <p class="mon-outcome__label">Less of the field driven over, from repeating the same tramlines exactly</p>
+      </div>
+    </section>
+    <p class="mon-outcomes-note">Figures are provisional until the evaluation reports in winter 2026.</p>
+
+    <div class="mon-case-body">
+      <div class="mon-prose">
+        <h2>What the machine does</h2>
+        <p>The tractor drives a route planned in advance across the field, following the same guidance lines to the centimetre on every pass. It drills seed, hoes weeds and moves between the field and the yard without a driver in the cab.</p>
+        <h2>Where the AI acts</h2>
+        <p>Two things are learned rather than fixed. The route planner works out the most efficient set of passes for the shape of the field. The vision system reads the cameras as the tractor moves and stops the machine for an obstacle, a person, or ground that does not look right.</p>
+        <p>An operator supervises up to three machines from one screen and can take control of any of them at any moment. The machine advises and acts within limits. The person is accountable.</p>
+
+        <figure class="mon-case-quote">
+          <blockquote class="mon-case-quote__text">&ldquo;It does the night shift I used to do myself. I am still the one who decides where it goes and when it stops.&rdquo;</blockquote>
+          <figcaption class="mon-case-quote__cite">Farm manager, Lincolnshire trial site</figcaption>
+        </figure>
+
+        <h2>What we'd do differently</h2>
+        <p>We publish this section on every case study. Honesty is cheaper than hindsight.</p>
+        <ul>
+          <li>Agree the safety case with the operators before the first pass, not after. The stop-distance rules changed how we planned routes.</li>
+          <li>Map every field boundary and gateway properly up front. Bad maps caused more stops than real obstacles did.</li>
+          <li>Budget for connectivity in the field. Rural signal, not the model, was the limiting factor most weeks.</li>
+        </ul>
+      </div>
+
+      <aside aria-label="Project facts" class="mon-facts">
+        <div class="mon-fact">
+          <span class="mon-fact__term">The fleet</span>
+          <p class="mon-fact__body">Three autonomous tractors across three farms, retrofitted onto standard machines.</p>
+        </div>
+        <div class="mon-fact">
+          <span class="mon-fact__term">Oversight</span>
+          <p class="mon-fact__body">A named operator supervises every machine and can stop or steer it. Every intervention is logged.</p>
+        </div>
+        <div class="mon-fact">
+          <span class="mon-fact__term">The data</span>
+          <p class="mon-fact__body">Field maps, camera feeds and machine telemetry. No personal data is used.</p>
+        </div>
+      </aside>
+    </div>
+
+    <aside class="mon-record" aria-label="Openness">
+      <p class="mon-record__text">Every AI tool here is explained in the open.</p>
+      <a class="mon-record__cta" href="/monument/how-we-work">How we work</a>
+    </aside>
+  </article>
+</main>
+{% endblock %}

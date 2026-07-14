@@ -1,0 +1,1817 @@
+// =========================================================================
+// VARIANT 3A — MONUMENT (rebuilt)
+// Concept: AI in the field. AI-augmented farming, nature and animal husbandry
+// (autonomous machinery, flood defence, livestock care, precision crop work).
+// Bright, warm, tech-organic. Committed agricultural palette, bespoke line-art
+// marks as the signature (no dark-poster defaults, no numbered ledger, no
+// serif-italic pull-quote, no stat-banner row). Bespoke bundle: no GOV.UK CSS.
+// CSP forbids inline style/script, so everything lives here as classes; SVG
+// marks use presentation attributes only.
+// =========================================================================
+
+$field: #f4f1e6; // warm cream / wheat, the ground
+$ink: #1e2a16; // deep field-green-black, the type
+$soil: #5b6347; // muted olive, secondary text
+$green: #17683a; // deep Defra-family green, primary accent
+$harvest: #b5610f; // harvest amber, the "AI activation" accent (graphical + large only)
+$amber-ink: #8a4708; // darker amber that passes AA (4.5:1+) for small text on cream
+$panel: #ebe6d5; // slightly deeper cream for panels and hovers
+$line: rgba(30, 42, 22, 0.16); // hairline rules
+$line-2: rgba(30, 42, 22, 0.28);
+$display: 'Archivo Black', sans-serif;
+$body: 'IBM Plex Sans', system-ui, sans-serif;
+$ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.mon-body {
+  margin: 0;
+  background: $field;
+  color: $ink;
+  font-family: $body;
+  -webkit-font-smoothing: antialiased;
+
+  ::selection {
+    background: $harvest;
+    color: $field;
+  }
+}
+
+// Base link colour at element specificity so component links keep their own.
+a {
+  color: $green;
+  text-decoration-color: rgba(23, 104, 58, 0.4);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: $ink;
+  text-decoration-color: $ink;
+}
+
+// Visible keyboard focus (WCAG 2.2 AA: 2.4.7, 2.4.13). Two-tone ring reads on
+// cream, ink and green: light inner ring shows on ink/green, dark outer on cream.
+.mon-body :focus-visible {
+  outline: 3px solid transparent; // forced-colors fallback
+  outline-offset: 2px;
+  border-radius: 2px;
+  box-shadow:
+    0 0 0 2px $field,
+    0 0 0 5px $ink;
+}
+
+.mon-accent {
+  color: $harvest;
+}
+
+@keyframes mon-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.js-enabled .mon-fade {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.6s $ease,
+    transform 0.6s $ease;
+}
+
+.js-enabled .mon-fade.in-view {
+  opacity: 1;
+  transform: none;
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .js-enabled .mon-fade {
+      opacity: 1;
+      transform: none;
+      animation: mon-fade-up 0.6s $ease both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+}
+
+.mon-page {
+  min-height: 100vh;
+  background: $field;
+  overflow-x: clip;
+}
+
+// ---------------- Masthead ----------------
+.mon-header {
+  border-bottom: 1.5px solid $ink;
+}
+
+.mon-header__inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 16px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.mon-brand {
+  text-decoration: none;
+  color: $ink;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  &:hover,
+  &:focus-visible {
+    color: $green;
+  }
+}
+
+// Bright theme: the green Defra logo reads directly on the cream, no plate.
+.mon-brand__logo {
+  flex: none;
+  width: 92px;
+  height: 48px;
+  background: url("images/defra-logo.svg") no-repeat left center / contain;
+}
+
+.mon-brand__name {
+  padding-left: 16px;
+  border-left: 1.5px solid $line-2;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  // Inherits $ink from .mon-brand so the brand hover (-> $green) reaches the name.
+}
+
+.mon-nav {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+  font-size: 14.5px;
+  font-weight: 500;
+}
+
+.mon-nav__link {
+  color: $ink;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    color: $green;
+    text-decoration: underline;
+    text-decoration-color: $green;
+    text-underline-offset: 3px;
+  }
+}
+
+// ---------------- Hero ----------------
+.mon-hero {
+  border-bottom: 1.5px solid $ink;
+}
+
+.mon-hero__inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 28px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.95fr);
+  gap: 56px;
+  align-items: center;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+// Hero scene: the flagship line-art field, drawn in ink with amber activation.
+.mon-hero__scene {
+  justify-self: center;
+  width: 100%;
+  max-width: 360px;
+  padding: 40px 0;
+
+  @media (max-width: 900px) {
+    max-width: 260px;
+    padding: 0 0 40px;
+  }
+}
+
+.mon-hero__copy {
+  padding: 84px 0;
+
+  @media (max-width: 900px) {
+    padding: 56px 0 8px;
+  }
+}
+
+.mon-hero__title {
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(40px, 6.6vw, 92px);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  margin: 0;
+  max-width: 15ch;
+}
+
+.mon-hero__lede {
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.6;
+  color: $soil;
+  max-width: 46ch;
+  margin: 28px 0 0;
+}
+
+.mon-hero__actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 34px;
+  flex-wrap: wrap;
+}
+
+.mon-btn {
+  flex: none;
+  background: $green;
+  color: $field;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 14px 26px;
+  border-radius: 2px;
+
+  &:hover,
+  &:focus-visible {
+    background: $ink;
+    color: $field;
+  }
+}
+
+.mon-btn--ghost {
+  background: transparent;
+  color: $ink;
+  border: 1.5px solid $ink;
+  padding: 12.5px 24px;
+
+  &:hover,
+  &:focus-visible {
+    background: $ink;
+    color: $field;
+  }
+}
+
+// ---------------- Generative plates ----------------
+// Engraved field-survey plates (parcels, furrows, drill, canopy) drawn in ink
+// with green and harvest accents, on a scroll-triggered reveal by monument.js.
+.mon-plate {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+// No-JS fallback: a plain bordered square so the scene is never empty.
+html:not(.js-enabled) .mon-plate {
+  border: 1.5px solid $line;
+  border-radius: 4px;
+}
+
+.mon-flagship__scene .mon-plate {
+  max-width: 260px;
+}
+
+.mon-field__scene .mon-plate {
+  max-width: 148px;
+}
+
+// ---------------- Case studies (illustrated, asymmetric) ----------------
+.mon-cases {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 72px 28px 24px;
+}
+
+.mon-cases__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+.mon-cases__title {
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(26px, 3.2vw, 44px);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.mon-cases__note {
+  font-size: 14px;
+  color: $soil;
+  margin: 0;
+  max-width: 42ch;
+}
+
+// Flagship: wide, with the detailed scene.
+.mon-flagship {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.9fr);
+  gap: 48px;
+  align-items: center;
+  padding: 36px;
+  background: $panel;
+  border: 1.5px solid $ink;
+  border-radius: 3px;
+  text-decoration: none;
+  color: $ink;
+  margin-bottom: 24px;
+  transition:
+    transform 0.2s $ease,
+    box-shadow 0.2s $ease;
+
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 6px 8px 0 $ink;
+  }
+
+  @media (max-width: 820px) {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 24px;
+  }
+}
+
+.mon-flagship__scene {
+  order: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+
+  @media (max-width: 820px) {
+    order: -1;
+    min-height: 0;
+  }
+}
+
+.mon-flagship__meta {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  font-size: 13.5px;
+  margin-bottom: 16px;
+}
+
+.mon-flagship__title {
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(28px, 3.6vw, 52px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  margin: 0 0 16px;
+  max-width: 16ch;
+}
+
+.mon-flagship__summary {
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: $soil;
+  margin: 0 0 18px;
+  max-width: 48ch;
+}
+
+.mon-flagship__how {
+  font-size: 14.5px;
+  line-height: 1.55;
+  margin: 0 0 22px;
+  max-width: 46ch;
+
+  b {
+    color: $amber-ink;
+    font-weight: 600;
+  }
+}
+
+.mon-flagship__cta {
+  font-weight: 600;
+  font-size: 15px;
+  color: $green;
+}
+
+// Supporting cases: a row of illustrated cards.
+.mon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+}
+
+.mon-field {
+  display: flex;
+  flex-direction: column;
+  background: $field;
+  border: 1.5px solid $ink;
+  border-radius: 3px;
+  padding: 24px;
+  text-decoration: none;
+  color: $ink;
+  transition:
+    transform 0.2s $ease,
+    box-shadow 0.2s $ease;
+
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 5px 6px 0 $ink;
+  }
+}
+
+.mon-field__scene {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0 6px;
+  margin-bottom: 16px;
+}
+
+.mon-field__meta {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  font-size: 12.5px;
+  margin-bottom: 8px;
+}
+
+.mon-field__title {
+  font-weight: 700;
+  font-size: 19px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0 0 8px;
+}
+
+.mon-field__summary {
+  font-size: 14px;
+  line-height: 1.55;
+  color: $soil;
+  margin: 0 0 16px;
+  flex: 1;
+}
+
+.mon-field__cta {
+  font-weight: 600;
+  font-size: 14px;
+  color: $green;
+}
+
+.mon-tag {
+  font-weight: 600;
+  white-space: nowrap;
+
+  &--green {
+    color: $green;
+  }
+
+  &--amber {
+    color: $amber-ink;
+  }
+
+  &--dim {
+    color: $soil;
+  }
+}
+
+.mon-area {
+  color: $soil;
+}
+
+// ---------------- How we work ----------------
+.mon-how {
+  margin-top: 64px;
+  background: $ink;
+  color: $field;
+}
+
+.mon-how__inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 72px 28px;
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(0, 2fr);
+  gap: 48px;
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+.mon-how__title {
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(26px, 3vw, 40px);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.mon-how__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 36px 44px;
+}
+
+.mon-principle__title {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+  color: #a7d8a0; // light mint on the ink band
+}
+
+.mon-principle__body {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #cdd6c2;
+  margin: 0;
+}
+
+// ---------------- Transparency band ----------------
+// Green rather than amber: a mid amber cannot reach AA with any text colour.
+.mon-transparency {
+  background: $green;
+}
+
+.mon-transparency__link {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+  flex-wrap: wrap;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 22px 28px;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.mon-transparency__text,
+.mon-transparency__cta {
+  color: $field;
+  font-weight: 600;
+}
+
+.mon-transparency__text {
+  font-size: clamp(15px, 1.6vw, 18px);
+}
+
+.mon-transparency__cta {
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+// ---------------- Blog ----------------
+.mon-blog {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 76px 28px 8px;
+}
+
+.mon-blog__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.mon-blog__title {
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(26px, 3vw, 40px);
+  letter-spacing: -0.02em;
+  margin: 0 0 10px;
+}
+
+.mon-blog__all {
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+.mon-post {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: baseline;
+  padding: 22px 0;
+  border-bottom: 1.5px solid $line;
+  text-decoration: none;
+  color: $ink;
+
+  &:hover,
+  &:focus-visible {
+    color: $green;
+  }
+}
+
+.mon-post__title {
+  font-weight: 600;
+  font-size: clamp(18px, 2.2vw, 24px);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.mon-post__date {
+  font-size: 13.5px;
+  color: $soil;
+}
+
+// ---------------- Strategy + careers doors ----------------
+.mon-doors {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 56px 28px 104px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.mon-door {
+  background: $field;
+  text-decoration: none;
+  color: $ink;
+  border: 1.5px solid $ink;
+  border-radius: 3px;
+  padding: 34px 30px;
+  transition:
+    background 0.2s $ease,
+    color 0.2s $ease;
+}
+
+.mon-door__title {
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(22px, 2.4vw, 32px);
+  margin: 0 0 10px;
+  letter-spacing: -0.01em;
+}
+
+.mon-door__body {
+  font-size: 14.5px;
+  line-height: 1.6;
+  margin: 0;
+  color: $soil;
+}
+
+.mon-door--green:hover,
+.mon-door--green:focus-visible {
+  background: $green;
+  color: $field;
+  border-color: $green;
+
+  .mon-door__body {
+    color: rgba(244, 241, 230, 0.85);
+  }
+}
+
+.mon-door--light:hover,
+.mon-door--light:focus-visible {
+  background: $ink;
+  color: $field;
+
+  .mon-door__body {
+    color: rgba(244, 241, 230, 0.85);
+  }
+}
+
+// ---------------- Footer ----------------
+.mon-footer {
+  border-top: 1.5px solid $ink;
+}
+
+.mon-footer__inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 44px 28px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.mon-footer__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.mon-footer__logo {
+  display: block;
+  width: 130px;
+  height: 68px;
+  background: url("images/defra-logo.svg") no-repeat left center / contain;
+}
+
+.mon-footer__legal {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  font-size: 13px;
+
+  a {
+    color: $ink;
+
+    &:hover,
+    &:focus-visible {
+      color: $green;
+      text-decoration: underline;
+      text-decoration-color: $green;
+      text-underline-offset: 3px;
+    }
+  }
+}
+
+.mon-footer__licence {
+  font-size: 12.5px;
+  color: $soil;
+  margin: 0;
+  max-width: 80ch;
+  line-height: 1.6;
+
+  a {
+    color: $ink;
+
+    &:hover,
+    &:focus-visible {
+      color: $green;
+      text-decoration: underline;
+      text-decoration-color: $green;
+      text-underline-offset: 3px;
+    }
+  }
+}
+
+// ---------------- Case study ----------------
+.mon-article {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+.mon-breadcrumb {
+  padding: 26px 0 0;
+}
+
+.mon-breadcrumb__link {
+  font-size: 14px;
+}
+
+.mon-case-header {
+  padding: 44px 0 0;
+  border-bottom: 1.5px solid $ink;
+  margin-bottom: 52px;
+}
+
+.mon-case-meta {
+  display: flex;
+  gap: 10px 28px;
+  flex-wrap: wrap;
+  font-size: 13.5px;
+  color: $soil;
+  margin-bottom: 24px;
+}
+
+.mon-case-meta__live {
+  color: $green;
+  font-weight: 600;
+}
+
+.mon-case-title {
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(36px, 6.4vw, 88px);
+  line-height: 0.99;
+  letter-spacing: -0.02em;
+  margin: 0 0 30px;
+  max-width: 15ch;
+}
+
+.mon-case-standfirst {
+  font-size: clamp(16px, 1.7vw, 20px);
+  line-height: 1.6;
+  color: $soil;
+  max-width: 58ch;
+  margin: 0 0 44px;
+}
+
+.mon-outcomes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 40px;
+  padding-bottom: 8px;
+}
+
+.mon-outcome__figure {
+  font-family: $display;
+  font-size: clamp(40px, 4.6vw, 64px);
+  letter-spacing: -0.02em;
+  color: $green;
+}
+
+.mon-outcome__label {
+  font-size: 14px;
+  line-height: 1.55;
+  color: $soil;
+  margin: 8px 0 0;
+  max-width: 30ch;
+}
+
+.mon-outcomes-note {
+  font-size: 13px;
+  color: $soil;
+  margin: 14px 0 0;
+}
+
+.mon-case-body {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(220px, 1fr);
+  gap: 64px;
+  padding: 56px 0 0;
+
+  @media (max-width: 820px) {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+.mon-prose {
+  font-size: 17px;
+  line-height: 1.75;
+  color: $ink;
+  max-width: 66ch;
+
+  h2 {
+    font-weight: 600;
+    font-size: 24px;
+    letter-spacing: -0.015em;
+    margin: 34px 0 14px;
+    color: $ink;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  p {
+    margin: 0 0 22px;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.mon-case-quote {
+  margin: 44px 0;
+  padding: 0 0 0 26px;
+  border-left: 3px solid $harvest;
+}
+
+.mon-case-quote__text {
+  margin: 0;
+  font-weight: 600;
+  font-size: clamp(21px, 2.4vw, 30px);
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+}
+
+.mon-case-quote__cite {
+  margin-top: 16px;
+  font-size: 14px;
+  color: $soil;
+}
+
+.mon-facts {
+  font-size: 14px;
+  color: $soil;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  border-left: 1.5px solid $line-2;
+  padding-left: 28px;
+  align-self: start;
+}
+
+.mon-fact__term {
+  color: $ink;
+  font-weight: 600;
+  font-size: 13.5px;
+}
+
+.mon-record {
+  margin: 72px 0 104px;
+  background: $green;
+  border-radius: 3px;
+  padding: clamp(26px, 3vw, 44px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.mon-record__text {
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(20px, 2.6vw, 32px);
+  margin: 0;
+  max-width: 26ch;
+  color: $field;
+  letter-spacing: -0.01em;
+}
+
+.mon-record__cta {
+  flex: none;
+  background: $field;
+  color: $ink;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 14px 26px;
+  border-radius: 2px;
+
+  &:hover,
+  &:focus-visible {
+    background: $ink;
+    color: $field;
+  }
+}
+
+// ---------------- Content pages (register, blog, prose) ----------------
+.mon-content {
+  padding: 0 0 104px;
+}
+
+.mon-prose.mon-content {
+  max-width: 66ch;
+}
+
+.mon-tablewrap {
+  overflow-x: auto;
+}
+
+.mon-register {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.mon-register th,
+.mon-register td {
+  text-align: left;
+  padding: 16px 24px 16px 0;
+  border-bottom: 1.5px solid $line;
+  vertical-align: top;
+}
+
+.mon-register th {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: $soil;
+}
+
+.mon-register td {
+  color: $ink;
+}
+
+.mon-postlist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mon-postlist__item {
+  max-width: 66ch;
+  padding: 32px 0;
+  border-bottom: 1.5px solid $line;
+}
+
+.mon-postlist__date {
+  font-size: 13px;
+  color: $soil;
+}
+
+.mon-postlist__title {
+  font-weight: 700;
+  font-size: clamp(21px, 2.6vw, 30px);
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  margin: 8px 0 12px;
+  color: $ink;
+}
+
+.mon-postlist__excerpt {
+  font-size: 16px;
+  line-height: 1.6;
+  color: $soil;
+  margin: 0 0 12px;
+}
+
+.mon-postlist__author {
+  font-size: 13.5px;
+  color: $soil;
+}
+
+// ---------------- Reduced motion ----------------
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    // stylelint-disable-next-line declaration-no-important
+    animation-duration: 0.01ms !important;
+    // stylelint-disable-next-line declaration-no-important
+    animation-delay: 0ms !important;
+    // stylelint-disable-next-line declaration-no-important
+    transition-duration: 0.01ms !important;
+  }
+
+  .js-enabled .mon-fade {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// ---------------- Design-review bar (prototype chrome) ----------------
+.mon-review {
+  background: $ink;
+}
+
+.mon-review__inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 8px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.mon-review__label {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(244, 241, 230, 0.6);
+}
+
+.mon-review__link {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: $field;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    text-decoration: underline;
+    color: $field;
+  }
+}
+
+// ---------------- Skip link (accessibility) ----------------
+.mon-body .mon-skip-link {
+  position: absolute;
+  top: 0;
+  left: -999px;
+  z-index: 100;
+  padding: 10px 15px;
+  background: $ink;
+  color: $field;
+  font-family: $body;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    color: $field;
+    background: $ink;
+  }
+
+  &:focus {
+    left: 0;
+  }
+}
+
+// =========================================================================
+// Inner-page artifacts (strategy, how-we-work, careers, blog, case)
+// Bespoke, tailored components in the Monument poster idiom. Line-art is
+// inline SVG (presentation attributes only); amber is the "AI acts" token,
+// one node per artifact. Everything stacks or scrolls under ~560–820px.
+// =========================================================================
+
+// Shared inner-page section scaffolding
+.mon-section {
+  padding: 60px 0 0;
+}
+
+.mon-block-title {
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(22px, 2.8vw, 36px);
+  line-height: 1.03;
+  letter-spacing: -0.02em;
+  margin: 0 0 10px;
+  color: $ink;
+}
+
+.mon-block-intro {
+  font-size: 16px;
+  line-height: 1.6;
+  color: $soil;
+  max-width: 54ch;
+  margin: 0 0 28px;
+}
+
+// ---- Strategy: "Where we will not go" inverted panel ----
+// The boundary is a framed cream panel (not a stark ink block, which clashed
+// with the rest of the cream page). The 2px ink frame + the "no" marks give it
+// weight without inverting the whole section.
+.mon-boundary {
+  background: $panel;
+  color: $ink;
+  border: 2px solid $ink;
+  border-radius: 3px;
+  padding: clamp(36px, 5vw, 64px);
+  margin: 4px 0 0;
+}
+
+.mon-boundary__title {
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: $ink;
+  margin: 0 0 14px;
+}
+
+.mon-boundary__intro {
+  font-size: clamp(15px, 1.8vw, 18px);
+  line-height: 1.6;
+  color: $soil;
+  max-width: 48ch;
+  margin: 0 0 30px;
+}
+
+.mon-boundary__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mon-boundary__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 22px 0;
+  border-top: 1.5px solid $line-2;
+
+  &:last-child {
+    border-bottom: 1.5px solid $line-2;
+  }
+}
+
+.mon-boundary__mark {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  margin-top: 4px;
+}
+
+.mon-boundary__ring {
+  fill: none;
+  stroke: $ink;
+  stroke-width: 1.6;
+}
+
+.mon-boundary__slash {
+  stroke: $ink;
+  stroke-width: 1.6;
+}
+
+.mon-boundary__text {
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(19px, 2.6vw, 32px);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+// ---- Strategy: "Where we will use AI" engraved strata bands ----
+.mon-strata {
+  border-top: 1.5px solid $ink;
+}
+
+.mon-strata__band {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr) auto;
+  gap: clamp(18px, 3vw, 32px);
+  align-items: start;
+  padding: 26px 0;
+  border-bottom: 1.5px solid $line;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 56px 1fr;
+  }
+}
+
+.mon-strata__scene {
+  width: 100%;
+}
+
+.mon-strata__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: right;
+
+  @media (max-width: 640px) {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    gap: 14px;
+    text-align: left;
+  }
+}
+
+.mon-strata__area {
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(21px, 3vw, 30px);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: $ink;
+  margin: 0 0 8px;
+}
+
+.mon-strata__gain {
+  font-size: 15px;
+  line-height: 1.55;
+  color: $soil;
+  margin: 0;
+  max-width: 46ch;
+}
+
+.mon-strata__eg {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: $green;
+}
+
+.mon-strata__run {
+  font-size: 12.5px;
+  color: $soil;
+}
+
+// ---- Strategy: measures close ----
+.mon-measures {
+  border-top: 1.5px solid $line;
+}
+
+.mon-measure {
+  display: grid;
+  grid-template-columns: minmax(170px, 0.5fr) minmax(0, 1fr);
+  gap: 8px 40px;
+  align-items: baseline;
+  padding: 26px 16px 26px 6px;
+  border-bottom: 1.5px solid $line;
+  transition: background 0.15s $ease;
+
+  &:hover {
+    background: $panel;
+  }
+
+  @media (max-width: 560px) {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+.mon-measure__term {
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(17px, 1.9vw, 22px);
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+  color: $ink;
+  margin: 0;
+}
+
+.mon-measure__body {
+  font-size: 15px;
+  line-height: 1.6;
+  color: $soil;
+  margin: 0;
+}
+
+.mon-measure__next {
+  margin: 22px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: $ink;
+}
+
+// ---- How we work: poster plate-cards ----
+.mon-poster {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.mon-poster__card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 268px;
+  border: 1.5px solid $ink;
+  border-radius: 3px;
+  background: $field;
+  padding: 28px 26px 30px;
+}
+
+.mon-poster__scene {
+  position: relative;
+  width: 104px;
+  margin-bottom: 24px;
+}
+
+.mon-poster__title {
+  position: relative;
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(20px, 2.4vw, 27px);
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+  margin: 0 0 12px;
+  color: $ink;
+}
+
+.mon-poster__body {
+  position: relative;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: $soil;
+  margin: 0;
+}
+
+
+// ---- How we work: vertical furrow-spine gateway ledger ----
+.mon-gateway {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mon-gateway__gate {
+  position: relative;
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 20px;
+  padding: 0 0 30px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 24px;
+    bottom: -2px;
+    width: 2px;
+    background: $ink;
+    z-index: 0;
+  }
+
+  &:last-child::before {
+    display: none;
+  }
+}
+
+.mon-gateway__node {
+  position: relative;
+  z-index: 1;
+  width: 24px;
+  height: 24px;
+
+  svg {
+    display: block;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.mon-eng-ring {
+  fill: $field;
+  stroke: $ink;
+  stroke-width: 2;
+}
+
+.mon-eng-core {
+  fill: $ink;
+}
+
+.mon-gateway__gate.is-live .mon-eng-ring {
+  fill: $harvest;
+  stroke: $amber-ink;
+}
+
+.mon-gateway__gate.is-live .mon-eng-core {
+  fill: $field;
+}
+
+.mon-gateway__name {
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(19px, 2.2vw, 26px);
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+  color: $ink;
+  margin: 0 0 5px;
+}
+
+.mon-gateway__decision {
+  font-size: 15px;
+  line-height: 1.55;
+  color: $soil;
+  margin: 0 0 4px;
+  max-width: 54ch;
+}
+
+.mon-gateway__outcome {
+  font-size: 14px;
+  line-height: 1.5;
+  color: $ink;
+  margin: 0;
+  max-width: 54ch;
+}
+
+.mon-gateway__exit {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.mon-gateway__exit--stop,
+.mon-gateway__exit--live {
+  color: $amber-ink;
+}
+
+.mon-gateway__exit--off {
+  color: $soil;
+}
+
+// ---- How we work: editorial sign-off ----
+.mon-signoff {
+  margin-top: 76px;
+  border-top: 2px solid $ink;
+  padding: 40px 0 8px;
+}
+
+.mon-signoff__line {
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(24px, 3.4vw, 44px);
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  color: $ink;
+  max-width: 34ch;
+  margin: 0 0 28px;
+}
+
+.mon-signoff__note {
+  font-size: 16px;
+  line-height: 1.7;
+  color: $soil;
+  max-width: 58ch;
+  margin: 0;
+}
+
+// ---- Careers: roster table extras ----
+.mon-roster__role {
+  font-weight: 700;
+  font-size: 15.5px;
+  letter-spacing: -0.01em;
+  color: $ink;
+}
+
+.mon-roster__sub {
+  display: block;
+  margin-top: 4px;
+  font-size: 12.5px;
+  font-weight: 400;
+  color: $soil;
+}
+
+.mon-roster__disc {
+  color: $green;
+  font-weight: 600;
+}
+
+.mon-roster__flag {
+  color: $amber-ink;
+  font-weight: 700;
+}
+
+.mon-roster__key {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 14px 0 0;
+  font-size: 12.5px;
+  color: $soil;
+}
+
+.mon-roster__key-mark {
+  color: $amber-ink;
+  font-weight: 700;
+}
+
+// ---- Careers: "what every role shares" hallmarks ledger ----
+.mon-hallmarks {
+  border-top: 2px solid $ink;
+  border-bottom: 2px solid $ink;
+  padding: 8px 0 4px;
+}
+
+.mon-hallmarks__title {
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(20px, 2.4vw, 30px);
+  letter-spacing: -0.015em;
+  color: $ink;
+  margin: 22px 0 6px;
+}
+
+.mon-hallmarks__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mon-hallmarks__item {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  align-items: baseline;
+  gap: 6px;
+  padding: 20px 0;
+  border-top: 1.5px solid $line;
+}
+
+.mon-hallmarks__mark {
+  color: $green;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.mon-hallmarks__text {
+  font-size: clamp(17px, 2vw, 21px);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: $ink;
+}
+
+// ---- Careers: hiring stepper (vertical, numbered) ----
+.mon-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mon-step {
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: 20px;
+  align-items: start;
+  padding: 20px 0;
+  border-bottom: 1.5px solid $line;
+
+  &:first-child {
+    padding-top: 0;
+  }
+}
+
+.mon-step__num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border: 2px solid $green;
+  border-radius: 999px;
+  font-family: $display;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1;
+  color: $green;
+}
+
+.mon-step__stage {
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+  color: $ink;
+  margin: 0 0 4px;
+}
+
+.mon-step__days {
+  margin-left: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: $green;
+}
+
+.mon-step__detail {
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: $soil;
+  margin: 0;
+}
+
+// ---- Blog: featured lead ----
+.mon-feature {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.7fr);
+  gap: clamp(24px, 4vw, 48px);
+  align-items: center;
+  padding: 4px 0 40px;
+  border-bottom: 1.5px solid $ink;
+  margin-bottom: 8px;
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+.mon-feature__scene {
+  order: 2;
+  display: flex;
+  justify-content: center;
+
+  @media (max-width: 720px) {
+    order: -1;
+  }
+}
+
+.mon-feature__scene .mon-plate {
+  max-width: 280px;
+}
+
+.mon-feature__kicker {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $soil;
+  margin: 0 0 12px;
+}
+
+.mon-feature__title {
+  font-family: $display;
+  font-weight: 400;
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  margin: 0 0 16px;
+  color: $ink;
+  max-width: 18ch;
+}
+
+.mon-feature__excerpt {
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: $soil;
+  margin: 0 0 20px;
+  max-width: 48ch;
+}
+
+.mon-feature__meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 13.5px;
+  color: $soil;
+}
+
+// ---- Blog: author monogram avatar (ink hairline ring) ----
+
+// ---- Blog: filing-index labels + postlist meta ----
+.mon-index {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding-bottom: 2px;
+  border-bottom: 1.5px solid currentcolor;
+
+  &::before {
+    content: "\25C6";
+    font-size: 8px;
+    line-height: 1;
+  }
+
+  &--green {
+    color: $green;
+  }
+
+  &--amber {
+    color: $amber-ink;
+  }
+
+  &--dim {
+    color: $soil;
+  }
+}
+
+.mon-postlist__meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+// ---- Case study: plate header + facts ----
+.mon-case-plate {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.6fr);
+  gap: clamp(20px, 3vw, 40px);
+  align-items: center;
+  overflow: hidden;
+
+  @media (max-width: 820px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mon-case-plate__scene {
+  order: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  overflow: hidden;
+
+  @media (max-width: 820px) {
+    order: -1;
+    justify-content: flex-start;
+  }
+}
+
+.mon-case-plate__scene .mon-plate {
+  width: 340px;
+  max-width: 118%;
+  margin-right: -8%;
+
+  @media (max-width: 820px) {
+    width: 220px;
+    margin-right: 0;
+  }
+}
+
+.mon-fact__body {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: $soil;
+}

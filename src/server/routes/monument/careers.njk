@@ -1,0 +1,78 @@
+{% extends 'variants/monument.njk' %}
+
+{% block main %}
+<main id="main-content" tabindex="-1">
+  <article class="mon-article">
+    <nav aria-label="Breadcrumb" class="mon-breadcrumb">
+      <a href="/monument" class="mon-breadcrumb__link">&larr; AI at Defra</a>
+    </nav>
+
+    <header class="mon-case-header">
+      <h1 class="mon-case-title">Build AI you'd put your name to</h1>
+      <p class="mon-case-standfirst">Defra's AI teams build and assure the AI used on the environment, food and farming. Engineers, scientists, designers and researchers, every one an AI role. The decisions stay with people.</p>
+    </header>
+
+    <div class="mon-content">
+      <section aria-labelledby="roles">
+        <h2 class="mon-block-title" id="roles">Current openings</h2>
+        <div class="mon-tablewrap">
+          <table class="mon-register">
+            <thead>
+              <tr>
+                <th scope="col">Role</th>
+                <th scope="col">Discipline</th>
+                <th scope="col">Area</th>
+                <th scope="col">Closes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in roles %}
+              <tr>
+                <td>
+                  <span class="mon-roster__role">{{ r.title }}</span>
+                  <span class="mon-roster__sub">{{ r.band }} &middot; {{ r.salary }} &middot; {{ r.location }}</span>
+                </td>
+                <td><span class="mon-roster__disc">{{ r.discipline }}</span></td>
+                <td>{{ r.area }}</td>
+                <td>{{ r.closing }} <span class="mon-roster__flag" aria-hidden="true">&#9670;</span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <p class="mon-roster__key"><span class="mon-roster__key-mark" aria-hidden="true">&#9670;</span> Indicative closing dates. Live vacancies are advertised on Civil Service Jobs.</p>
+      </section>
+
+      <section class="mon-section" aria-labelledby="share">
+        <div class="mon-hallmarks">
+          <h2 class="mon-hallmarks__title" id="share">What every role shares</h2>
+          <ul class="mon-hallmarks__list">
+            {% for h in hiringBar %}
+            <li class="mon-hallmarks__item">
+              <span class="mon-hallmarks__mark" aria-hidden="true">&#9670;</span>
+              <span class="mon-hallmarks__text">{{ h }}</span>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+
+      <section class="mon-section" aria-labelledby="hiring">
+        <h2 class="mon-block-title" id="hiring">How hiring runs</h2>
+        <p class="mon-block-intro">Five steps from application to offer, with feedback either way.</p>
+        <ol class="mon-steps">
+          {% for s in hiringStages %}
+          <li class="mon-step">
+            <span class="mon-step__num" aria-hidden="true">{{ loop.index }}</span>
+            <div class="mon-step__body">
+              <p class="mon-step__stage">{{ s.stage }}{% if s.days %}<span class="mon-step__days">{{ s.days }}</span>{% endif %}</p>
+              <p class="mon-step__detail">{{ s.detail }}</p>
+            </div>
+          </li>
+          {% endfor %}
+        </ol>
+      </section>
+    </div>
+  </article>
+</main>
+{% endblock %}

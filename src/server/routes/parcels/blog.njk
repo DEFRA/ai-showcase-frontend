@@ -1,0 +1,49 @@
+{% extends 'variants/parcels.njk' %}
+
+{% block main %}
+<main id="main-content" tabindex="-1">
+  <article class="par-article">
+    <nav aria-label="Breadcrumb" class="par-breadcrumb">
+      <a href="/parcels" class="par-breadcrumb__link">&larr; AI at Defra</a>
+    </nav>
+
+    <header class="par-case-header">
+      <div class="par-case-header__body">
+        <h1 class="par-case-title">From the team</h1>
+        <p class="par-case-standfirst">Working notes from the people building and assuring AI at Defra. We publish what we learn as we go, including the things that did not work.</p>
+      </div>
+    </header>
+
+    <div class="par-pagebody">
+      {% set lead = posts[0] %}
+      <article class="par-feature">
+        <div class="par-feature__meta">
+          <span class="par-ptag par-ptag--green">{{ lead.tag }}</span>
+          <span class="par-feature__date">{{ lead.date }} &middot; {{ lead.readingTime }} read</span>
+        </div>
+        <h2 class="par-feature__title">{{ lead.title }}</h2>
+        <p class="par-feature__excerpt">{{ lead.excerpt }}</p>
+        <span class="par-feature__author">{{ lead.author }}</span>
+      </article>
+
+      <div class="par-furrows">
+        {% for post in posts %}
+        {% if not loop.first %}
+        <article class="par-blogrow">
+          <div class="par-blogrow__head">
+            <h3 class="par-blogrow__title">{{ post.title }}</h3>
+            <span class="par-blogrow__date">{{ post.date }} &middot; {{ post.readingTime }}</span>
+          </div>
+          <p class="par-blogrow__excerpt">{{ post.excerpt }}</p>
+          <div class="par-blogrow__foot">
+            <span class="par-ptag par-ptag--{{ post.tagTone }}">{{ post.tag }}</span>
+            <span class="par-blogrow__author">{{ post.author }}</span>
+          </div>
+        </article>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </article>
+</main>
+{% endblock %}

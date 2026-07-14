@@ -1,0 +1,67 @@
+{% extends 'variants/parcels.njk' %}
+
+{% block main %}
+<main id="main-content" tabindex="-1">
+  <article class="par-article">
+    <nav aria-label="Breadcrumb" class="par-breadcrumb">
+      <a href="/parcels" class="par-breadcrumb__link">&larr; AI at Defra</a>
+    </nav>
+
+    <header class="par-case-header">
+      <div class="par-case-meta">
+        <span>Live pilot</span>
+        <span>Sheffield and the UK-AIR network</span>
+        <span>Running since September 2025</span>
+      </div>
+      <div class="par-case-header__body">
+        <h1 class="par-case-title">Forecasting air quality, street by street</h1>
+        <p class="par-case-standfirst">Machine learning is helping our forecasters correct the national air quality model against what sensors actually recorded. Local authorities get an earlier, more local warning when pollution is likely to spike.</p>
+      </div>
+    </header>
+
+    <section aria-label="Results" class="par-outcomes">
+      {% for o in outcomes %}
+      <div class="par-outcome">
+        <div class="par-outcome__figure">{{ o.figure }}</div>
+        <p class="par-outcome__label">{{ o.label }}</p>
+      </div>
+      {% endfor %}
+    </section>
+    <p class="par-outcomes-note">Figures are provisional until the evaluation finishes in autumn 2026.</p>
+
+    <div class="par-case-body">
+      <div class="par-prose">
+        <h2>What the forecast does today</h2>
+        <p>Defra publishes a daily air quality forecast for the UK. It's built on an atmospheric model and readings from the national monitoring network. It works well at regional scale, but a model that covers the whole country can miss what a single street corner is doing. A school run. An inversion layer. A bonfire weekend.</p>
+        <h2>What we changed</h2>
+        <p>We trained a correction model on years of history: what the forecast said, what each monitoring site then recorded, and the weather in between. The model learns each site's habits and nudges the forecast towards them.</p>
+        <p>Forecasters review every output before it's published, and can override it. The model advises. People decide.</p>
+
+        <figure class="par-case-quote">
+          <blockquote class="par-case-quote__text">&ldquo;The forecast used to land after lunch. Now it's there before the school run, and it tells me why it thinks tomorrow will be bad.&rdquo;</blockquote>
+          <figcaption class="par-case-quote__cite">Environmental health officer, Sheffield City Council</figcaption>
+        </figure>
+
+        <h2>What we'd do differently</h2>
+        <p>We publish this section on every case study. Honesty is cheaper than hindsight.</p>
+        <ul>
+          <li>Set the evaluation baseline before the pilot, not during it. We lost a month reconstructing one.</li>
+          <li>Bring local authority users in from week one. Their definition of &ldquo;useful&rdquo; reshaped the alert format.</li>
+          <li>Budget more time for sensor data cleaning than for modelling. It needed twice what we planned.</li>
+        </ul>
+      </div>
+
+      <aside aria-label="Project facts" class="par-facts">
+        {% for f in caseFacts %}
+        <div class="par-fact"><span class="par-fact__term">{{ f.term }}</span><p class="par-fact__body">{{ f.body }}</p></div>
+        {% endfor %}
+      </aside>
+    </div>
+
+    <section class="par-record" aria-label="Openness">
+      <p class="par-record__text">This AI is explained in the open. See what that means and how a person stays accountable for every output.</p>
+      <a href="/parcels/how-we-work" class="par-record__cta">How we work &rarr;</a>
+    </section>
+  </article>
+</main>
+{% endblock %}

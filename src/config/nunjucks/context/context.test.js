@@ -71,7 +71,7 @@ describe('context and cache', () => {
               href: '/about'
             }
           ],
-          serviceName: 'ai-showcase-frontend',
+          serviceName: 'AI at Defra',
           serviceUrl: '/'
         })
       })
@@ -160,7 +160,7 @@ describe('context and cache', () => {
               href: '/about'
             }
           ],
-          serviceName: 'ai-showcase-frontend',
+          serviceName: 'AI at Defra',
           serviceUrl: '/'
         })
       })

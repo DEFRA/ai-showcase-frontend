@@ -1,0 +1,82 @@
+{% extends 'variants/daylight.njk' %}
+
+{% block main %}
+<main id="main-content" tabindex="-1">
+  <article class="day-article">
+    <nav aria-label="Breadcrumb" class="day-breadcrumb">
+      <a href="/daylight" class="day-breadcrumb__link">&larr; AI at Defra</a>
+    </nav>
+  </article>
+
+  <div class="day-pagehead">
+    <h1 class="day-pagehead__title">How we work</h1>
+    <p class="day-pagehead__lede">Three rules decide what we build and what we stop. They are the same rules we use to hold each other to account, and to decide when to say no.</p>
+  </div>
+
+  <div class="day-canvas">
+    <section aria-labelledby="dl-rules-h">
+      <h2 id="dl-rules-h" class="day-block-head">The three rules</h2>
+      {% set rulePlates = ['grid', 'wave', 'flow'] %}
+      <div class="day-principles">
+        {% for p in principles %}
+        <div class="day-principle-card">
+          <div class="day-principle-card__plate">
+            <canvas data-seed="{{ p.title }}" data-plate="{{ rulePlates[loop.index0 % 3] }}" aria-hidden="true" class="day-plate"></canvas>
+          </div>
+          <h3 class="day-principle-card__title">{{ p.title }}</h3>
+          <p class="day-principle-card__body">{{ p.body }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="day-blockgap" aria-labelledby="dl-flow-h">
+      <h2 id="dl-flow-h" class="day-block-head">What happens to a request</h2>
+      <ol class="day-vh">
+        <li>Request: any Defra team brings us a problem.</li>
+        <li>Triage: is AI even the right tool? Most teams leave with something simpler.</li>
+        <li>Baseline: we agree what good looks like, up front.</li>
+        <li>Pilot: we build it, have it assured, and run it against the baseline.</li>
+        <li>Does it beat the baseline? If yes, we scale it. If no, we retire it in the open.</li>
+      </ol>
+      <div class="day-flow">
+        <svg class="day-flow__svg" viewBox="0 0 1000 270" aria-hidden="true">
+          <rect class="day-flow__spine" x="70" y="119" width="666" height="2"></rect>
+          <rect class="day-flow__spine" x="824" y="119" width="126" height="2"></rect>
+          <rect class="day-flow__branch" x="249" y="120" width="2" height="82"></rect>
+          <circle class="day-flow__open" cx="250" cy="202" r="5"></circle>
+          <rect class="day-flow__branch" x="779" y="164" width="2" height="62"></rect>
+          <rect class="day-flow__branch" x="779" y="224" width="171" height="2"></rect>
+          <circle class="day-flow__node--retire" cx="950" cy="225" r="6"></circle>
+          <circle class="day-flow__node" cx="70" cy="120" r="6"></circle>
+          <circle class="day-flow__node" cx="250" cy="120" r="6"></circle>
+          <circle class="day-flow__node" cx="430" cy="120" r="6"></circle>
+          <circle class="day-flow__node" cx="610" cy="120" r="6"></circle>
+          <circle class="day-flow__node--scale" cx="950" cy="120" r="6"></circle>
+          <polygon class="day-flow__diamond" points="780,76 824,120 780,164 736,120"></polygon>
+          <text class="day-flow__name" x="70" y="94">Request</text>
+          <text class="day-flow__name" x="250" y="94">Triage</text>
+          <text class="day-flow__name" x="430" y="94">Baseline</text>
+          <text class="day-flow__name" x="610" y="94">Pilot</text>
+          <text class="day-flow__name" x="950" y="94">Scale</text>
+          <text class="day-flow__q" x="780" y="58">Beats baseline?</text>
+          <text class="day-flow__yes" x="887" y="112">yes</text>
+          <text class="day-flow__no" x="788" y="192">no</text>
+          <text class="day-flow__name" x="950" y="209">Retire</text>
+          <text class="day-flow__sub" x="950" y="247">in the open</text>
+          <text class="day-flow__sub" x="250" y="226">Most teams leave</text>
+          <text class="day-flow__sub" x="250" y="244">with something simpler</text>
+        </svg>
+      </div>
+    </section>
+
+    <div class="day-actionstrip">
+      <div>
+        <p class="day-actionstrip__text">Any Defra team can bring us a problem. We&rsquo;ll tell you quickly whether AI is the right tool, and point you to something simpler if it isn&rsquo;t.</p>
+        <p class="day-actionstrip__note">Or email one of Defra&rsquo;s AI teams.</p>
+      </div>
+      <a href="/daylight" class="day-btn day-btn--mint">Start with AI triage</a>
+    </div>
+  </div>
+</main>
+{% endblock %}
